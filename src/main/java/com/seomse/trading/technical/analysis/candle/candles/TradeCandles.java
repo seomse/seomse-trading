@@ -16,6 +16,7 @@
 
 package com.seomse.trading.technical.analysis.candle.candles;
 
+import com.seomse.commons.utils.time.DateUtil;
 import com.seomse.commons.utils.time.Times;
 import com.seomse.trading.Trade;
 import com.seomse.trading.TradeAdd;
@@ -24,6 +25,7 @@ import com.seomse.trading.technical.analysis.candle.TradeCandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,6 +60,7 @@ public class TradeCandles {
     double steadyGapRatio = -1.0;
 
     boolean isEmptyCandleContinue = false;
+    boolean isEmptyCandleMake = false;
 
     private final Object observerLock = new Object();
     private CandleChangeObserver[] observers = EMPTY_OBSERVER;
@@ -275,7 +278,6 @@ public class TradeCandles {
      * @param endTime long endTime
      */
     void addTradeNewCandle(Trade trade, long startTime, long endTime){
-
         TradeCandle tradeCandle = new TradeCandle();
         tradeCandle.setOpenTime(startTime);
         tradeCandle.setCloseTime(endTime);
@@ -342,5 +344,163 @@ public class TradeCandles {
      */
     public double getSteadyGapRatio() {
         return steadyGapRatio;
+    }
+
+    /**
+     * 빈 캔들을 채운다.
+     * @param businessDayList 정렬 된 영업일 목록 yyyyMMdd
+     */
+    public void makeEmptyCandle(List<String> businessDayList){
+        boolean lessThenDay = timeGap < Times.DAY_1;
+        int candleSize = candleList.size();
+
+        for (int i = 0; i < candleSize-1; i++) {
+            TradeCandle tradeCandle = candleList.get(i);
+            TradeCandle nextTradeCandle = candleList.get(i+1);
+            long tradeOpenTime = tradeCandle.getOpenTime();
+            long nextTradeOpenTime = nextTradeCandle.getOpenTime();
+
+            String tradeOpenYmd = DateUtil.getDateYmd(tradeOpenTime,"yyyyMMdd");
+            String nextTradeOpenYmd = getNextOpenDay(tradeOpenYmd,businessDayList);
+
+            if(tradeOpenTime + timeGap == nextTradeOpenTime){
+                continue;
+            }
+
+            long nextOpenTime = getNextOpenTime(tradeOpenTime,nextTradeOpenYmd,lessThenDay);
+            double close = tradeCandle.getClose();
+
+            TradeCandle newCandle = new TradeCandle();
+            newCandle.setLow(close);
+            newCandle.setHigh(close);
+            newCandle.setOpen(close);
+            newCandle.setHigh(close);
+            newCandle.setOpenTime(nextOpenTime);
+            newCandle.setCloseTime(nextOpenTime + timeGap);
+
+            candleList.add(i+1,newCandle);
+            candleSize++;
+        }
+        candles = (TradeCandle[])candleList.toArray();
+        isEmptyCandleMake = true;
+    }
+
+    private String getNextOpenDay(String tradeOpenYmd , List<String> businessDayList) {
+        int businessDaySize = businessDayList.size();
+        int findIndex = -1;
+        String result = null;
+        for (int i = 0; i <businessDaySize-1; i++) {
+            String businessDay = businessDayList.get(i);
+            String nextBusinessDay = businessDayList.get(i+1);
+            if(!businessDay.equals(tradeOpenYmd)){
+                continue;
+            } else {
+                findIndex = i;
+                result = nextBusinessDay;
+                break;
+            }
+        }
+        for (int i = 0; i < findIndex; i++) {
+            businessDayList.remove(0);
+        }
+        return result;
+    }
+
+    private long getNextOpenTime(long tradeOpenTime,String nextTradeOpenYmd,boolean lessThenDay) {
+        long nextTime = tradeOpenTime + timeGap;
+        int nextTimeHm = Integer.parseInt( DateUtil.getDateYmd(nextTime,"HHmm") );
+        if(lessThenDay){
+            if(nextTimeHm > 1530){ // 15:30
+                return DateUtil.getDateTime( nextTradeOpenYmd + "0900" , "yyyyMMddHHmm");
+            } else {
+                return nextTime;
+            }
+        } else {
+            return DateUtil.getDateTime(nextTradeOpenYmd + "0900", "yyyyMMddHHmm");
+        }
+    }
+
+    /**
+     * 현재 정보로 더 큰 시간의 TradeCandles 를 만든다.
+     * @param bigTimeGap
+     * @return
+     */
+    public TradeCandles getBigTimeTradeCandles(long bigTimeGap){
+        if(bigTimeGap <= timeGap){
+            logger.error("time setting error : [" + bigTimeGap + "] is bigger than [" + timeGap + "]");
+            return null;
+        }
+        if(!isEmptyCandleMake){
+            logger.error("empty candle make first : makeEmptyCandle(List<String> businessDayList);");
+            return null;
+        }
+        TradeCandles bigTradeCandles = new TradeCandles(bigTimeGap);
+        bigTradeCandles.setShortGapRatio(this.shortGapRatio);
+        bigTradeCandles.setSteadyGapRatio(this.steadyGapRatio);
+
+        int candleSize = candleList.size();
+
+        int bigDivisionCount = (int)(bigTimeGap / timeGap);
+
+        boolean isMinute = bigTimeGap < Times.DAY_1;
+
+
+        List<TradeCandle> bigTradeCandleList = new ArrayList<>();
+
+        for (int i = 0; i < candleSize; i++) {
+
+            TradeCandle bigTradeCandle = new TradeCandle();
+
+            TradeCandle tradeCandle = candleList.get(i);
+            int tradeCount = tradeCandle.getTradeCount();
+            double volume = tradeCandle.getVolume();
+            double low = tradeCandle.getLow();
+            double high = tradeCandle.getHigh();
+            double open = tradeCandle.getOpen();
+            double close = tradeCandle.getClose();
+            long openTime = tradeCandle.getOpenTime();
+            long closeTime = tradeCandle.getCloseTime();
+
+            String tradeDay = DateUtil.getDateYmd(openTime,"MMdd");
+
+            for (int j = i+1; j < bigDivisionCount && i+1 < candleSize; j++) {
+                TradeCandle nextTradeCandle = candleList.get(j);
+                int nextTradeCount = nextTradeCandle.getTradeCount();
+                double nextVolume = nextTradeCandle.getVolume();
+                double nextLow = nextTradeCandle.getLow();
+                double nextHigh = nextTradeCandle.getHigh();
+                double nextClose = nextTradeCandle.getClose();
+                long nextOpenTime = nextTradeCandle.getOpenTime();
+                String nextTradeDay = DateUtil.getDateYmd(nextOpenTime,"MMdd");
+
+                if(!nextTradeDay.equals(tradeDay)){
+                    break;
+                }
+
+                volume += nextVolume;
+                if(nextLow < low){
+                    low = nextLow;
+                }
+                if(nextHigh > high){
+                    high = nextHigh;
+                }
+                close = nextClose;
+                tradeCount += nextTradeCount;
+
+            }
+            bigTradeCandle.setTradeCount(tradeCount);
+            bigTradeCandle.setOpen(open);
+            bigTradeCandle.setClose(close);
+            bigTradeCandle.setHigh(high);
+            bigTradeCandle.setLow(low);
+            bigTradeCandle.setOpenTime(openTime);
+            bigTradeCandle.setCloseTime(closeTime);
+            bigTradeCandleList.add(bigTradeCandle);
+        }
+
+        TradeCandle[] bigTradeCandleArr = (TradeCandle[])bigTradeCandleList.toArray();
+
+
+        return bigTradeCandles;
     }
 }
