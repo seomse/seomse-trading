@@ -76,10 +76,5 @@ class NextTradeAdd implements TradeAdd {
             tradeCandles.addTradeNewCandle(trade, startTime , startTime + timeGap);
         }
 
-
-
-
-
-
     }
 }
