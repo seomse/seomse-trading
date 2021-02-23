@@ -1,6 +1,7 @@
 rootProject.name = 'seomse-trading'
-include 'modules:technical-analysis'
-findProject(':modules:technical-analysis')?.name = 'technical-analysis'
-include 'modules:chart-view'
-findProject(':modules:chart-view')?.name = 'chart-view'
+include 'technical-analysis'
+project(':technical-analysis').projectDir = new File(settingsDir,'modules/technical-analysis')
+include 'chart-view'
+project(':chart-view').projectDir = new File(settingsDir,'modules/chart-view')
+
 
