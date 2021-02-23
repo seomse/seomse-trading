@@ -11,27 +11,14 @@
 - 이와 별개로 다양한 패턴 조합 자동 시뮬레이터 기능을 제공 하려고 합니다.
 - 다양한 기술적 분석을 공부하면서 구현중이므로 아직 구현되지 않은 부분이 많습니다.
 - seomse-stock, seomse-bitcoin 프로젝트에서 사용됩니다.
+
 - 최근 주식 자동매매에 사용되기 위해 많은 기능이 업데이트 예정입니다
-- 위 패키지를 사용한 내용들이 기술블로그에 올라가고 있습니다.
 
-
-# 구성
-- technical-analysis 
-  - 기술적 분석에 이용되는 다양한 기능
-- chart-view 
-  - 시각화
 
 # gradle
-- 기존에 seomse-trading 하나의 모듈이었던 부분이 세분화 됩니다.
-
 implementation 'com.seomse.trading:technical-analysis:0.1.0'
 - etc
     - https://mvnrepository.com/artifact/com.seomse.trading/technical-analysis/0.1.0
-
-implementation 'com.seomse.trading:chart-view:0.1.0'
-- etc
-    - https://mvnrepository.com/artifact/com.seomse.trading/chart-view/0.1.0
-
 
 # communication
 ### blog, homepage

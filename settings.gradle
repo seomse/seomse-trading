@@ -1,2 +1,6 @@
 rootProject.name = 'seomse-trading'
+include 'modules:technical-analysis'
+findProject(':modules:technical-analysis')?.name = 'technical-analysis'
+include 'modules:chart-view'
+findProject(':modules:chart-view')?.name = 'chart-view'
 

@@ -3,19 +3,25 @@ plugins {
 }
 
 group 'com.seomse.trading'
-version '0.1.9'
+version '0.1.0'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    //log
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+
     implementation 'ch.qos.logback:logback-core:1.2.3'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
     implementation 'ch.qos.logback:logback-access:1.2.3'
 
-    implementation 'com.seomse.commons:seomse-commons:1.2.2'
+    implementation 'com.seomse.commons:seomse-commons:1.2.5'
 
 }
 
+test {
+    useJUnitPlatform()
+}
