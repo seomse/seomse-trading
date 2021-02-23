@@ -34,8 +34,7 @@ import java.util.List;
  *  주가의 저점이 횡보하고 있고, 보조지표 저점이 상승하고 있는 상태도 상승 다이버전스임
  *  상승추세로 전환 가능성 높음
  *
- * 참고자료
- * https://m.blog.naver.com/PostView.nhn?blogId=pengyou_&logNo=221267419722&targetKeyword=&targetRecommendationCode=1
+
  * @author macle
  */
 public class RegularDivergence implements DivergenceSignalSearch {

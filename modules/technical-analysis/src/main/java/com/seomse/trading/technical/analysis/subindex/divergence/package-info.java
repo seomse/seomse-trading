@@ -35,9 +35,7 @@
  *   주가가 비슷한 높이의 저점을 형성하는 동안,, 보조지표 저점이 상승하는 현상
  *   상승추세로 전환 가능성이 높음
  *  
- *  
- * 참고자료
- * https://m.blog.naver.com/PostView.nhn?blogId=pengyou_&logNo=221267419722&targetKeyword=&targetRecommendationCode=1
+ *
  * @author macle
  */
 package com.seomse.trading.technical.analysis.subindex.divergence;

@@ -28,8 +28,7 @@ import com.seomse.trading.technical.analysis.candle.CandleStick;
  *  - 히든 상승 다이버전스
  *   주가의 저점이 높아지고, 보조지표 저점이 하락하는 현상을 히든 상승 다이버전스라고 함
  *   상승추세로 전환 가능성 높음
- * 참고자료
- * https://m.blog.naver.com/PostView.nhn?blogId=pengyou_&logNo=221267419722&targetKeyword=&targetRecommendationCode=1
+
  * @author macle
  */
 public class HiddenDivergence implements DivergenceSignalSearch {
