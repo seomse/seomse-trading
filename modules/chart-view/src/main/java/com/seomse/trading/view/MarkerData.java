@@ -1,0 +1,100 @@
+/*
+ * Copyright (C) 2020 Seomse Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.seomse.trading.view;
+
+public class MarkerData {
+    /**
+     * 마커 유형
+     */
+    public static enum MarkerType{belowBar,aboveBar,inBar}
+
+    /**
+     * 마커 모양
+     */
+    public static enum MarkerShape{circle ,square , arrowUp , arrowDown }
+    private long time;
+    private String color;
+    private String text;
+    private String id;
+    private MarkerType markerType;
+    private MarkerShape markerShape;
+
+    /**
+     * 시간을 설정한다.
+     * @return 시간
+     */
+    public long getTime() {
+        return time;
+    }
+
+    /**
+     * 색깔을 설정한다.
+     * @return 색깔
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * 문자를 설정한다.
+     * @return 문자
+     */
+    public String getText() {
+        return text;
+    }
+
+    /**
+     * ID를 설정한다.
+     * @return ID
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * 마커 유형을 얻는다.
+     * @return 마커 유형
+     */
+    public MarkerType getMarkerType() {
+        return markerType;
+    }
+
+    /**
+     * 마커 모양을 얻는다.
+     * @return 마커모양
+     */
+    public MarkerShape getMarkerShape() {
+        return markerShape;
+    }
+
+    /**
+     * Constructor
+     * @param time 시간
+     * @param color 색깔
+     * @param text 문자
+     * @param id ID
+     * @param markerType 마커유형
+     * @param markerShape 마커모양
+     */
+    public MarkerData(long time, String color, String text, String id, MarkerType markerType, MarkerShape markerShape) {
+        this.time = time;
+        this.color = color;
+        this.text = text;
+        this.id = id;
+        this.markerType = markerType;
+        this.markerShape = markerShape;
+    }
+}
