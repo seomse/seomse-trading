@@ -1,2 +1,0 @@
-include ':trading'
-project(':trading').projectDir = new File(settingsDir,'../technical-analysis')
