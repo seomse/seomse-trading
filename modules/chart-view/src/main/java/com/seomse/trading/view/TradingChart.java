@@ -67,8 +67,6 @@ public class TradingChart {
 
         pureJsContents = FileUtil.getFileContents(new File("resources/pure.js"),"UTF-8");
         lightWeightJsContents = FileUtil.getFileContents(new File("resources/lightweight-charts.standalone.production.js"),"UTF-8");
-        System.out.println(pureJsContents);
-        System.out.println(lightWeightJsContents);
         this.candleStickArr = candleStickArr;
         this.dateType = dateType;
         createChartStr.append( """
