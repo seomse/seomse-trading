@@ -15,16 +15,13 @@
  */
 package com.seomse.trading.view;
 
+import com.seomse.commons.utils.FileUtil;
 import com.seomse.commons.utils.time.DateUtil;
 import com.seomse.trading.technical.analysis.candle.CandleStick;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.util.Collections;
+import java.io.*;
 
-public class ChartViewController {
+public class TradingChart {
 
     /* 차트 데이터 타입 */
     public enum ChartDateType {MINUTE,DAY}
@@ -36,14 +33,29 @@ public class ChartViewController {
     /* 차트 날짜유형 */
     ChartDateType dateType;
 
+    /* pureJs contents */
+    String pureJsContents;
+    /* LightWeight Js contents */
+    String lightWeightJsContents;
+
+    /* title */
+    String browserTitle = "Seomse LightWeight-Chart View";
+
+    /**
+     * 브라우저 타이틀을 설정 한다.
+     * @param  browserTitle browserTitle
+     */
+    public void setBrowserTitle(String browserTitle) {
+        this.browserTitle = browserTitle;
+    }
+
     /**
      * Constructor
      * @param candleStickArr 캔들스틱 배열
      */
-    public ChartViewController(CandleStick[] candleStickArr){
+    public TradingChart(CandleStick[] candleStickArr){
         this(candleStickArr,600,300, ChartDateType.DAY);
     }
-
     /**
      * Constructor
      * @param candleStickArr 캔들스틱 배열
@@ -51,7 +63,12 @@ public class ChartViewController {
      * @param height Y축 높이
      * @param dateType 날짜유형
      */
-    public ChartViewController(CandleStick[] candleStickArr , int width , int height , ChartDateType dateType){
+    public TradingChart(CandleStick[] candleStickArr , int width , int height , ChartDateType dateType){
+
+        pureJsContents = FileUtil.getFileContents(new File("resources/pure.js"),"UTF-8");
+        lightWeightJsContents = FileUtil.getFileContents(new File("resources/lightweight-charts.standalone.production.js"),"UTF-8");
+        System.out.println(pureJsContents);
+        System.out.println(lightWeightJsContents);
         this.candleStickArr = candleStickArr;
         this.dateType = dateType;
         createChartStr.append( """
@@ -229,59 +246,25 @@ public class ChartViewController {
 
     /**
      * HTML 데이터를 전달 받는다.
-     * @return
+     * @return HTML
      */
     public String getHtml(){
         StringBuilder result = new StringBuilder("""
                 <!DOCTYPE html>
                 <html>
                 <head>
-                  <title>Seomse LightWeight-Chart View</title>
-                  <script src="http://pure.github.io/pure/libs/pure.js"></script>
+                  <title>%s</title>
                   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 </head>
                 <body>
-                """
+                    <script>%s</script>
+                    <script>%s</script>
+                  
+                """.formatted(browserTitle,pureJsContents,lightWeightJsContents)
         );
 
-        result.append("<script src='https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js'></script>\n");
         result.append("<script>\n").append(createChartStr.toString()).append("\n</script>\n");
 
         return result.append("</body></html>").toString();
-    }
-
-    /**
-     * 크롬드라이버 정보
-     */
-    public static final String WEB_DRIVER_ID = "webdriver.chrome.driver";
-    public static final String WEB_DRIVER_PATH = "bin/chromedriver.exe";
-
-    /**
-     * 크롬에 차트를 로드한다
-     * @param url URL
-     */
-    public void loadChrome(String url){
-        loadChrome(WEB_DRIVER_PATH,url);
-    }
-
-    /**
-     * 크롬에 차트를 로드한다
-     * @param chromeDriverPath 크롬드라이버 위치
-     * @param url URL
-     */
-    public void loadChrome(String chromeDriverPath,String url){
-        WebDriver driver;
-
-        WebElement webElement;
-
-        System.setProperty(WEB_DRIVER_ID, chromeDriverPath);
-
-
-        ChromeOptions options = new ChromeOptions();
-        options.setExperimentalOption("useAutomationExtension", false);
-        options.setExperimentalOption("excludeSwitches",
-                Collections.singletonList("enable-automation"));
-        driver = new ChromeDriver(options);
-        driver.get("file://"+url);
     }
 }

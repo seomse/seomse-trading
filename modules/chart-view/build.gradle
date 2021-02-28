@@ -2,7 +2,6 @@ plugins {
     id 'java'
 }
 
-
 group 'com.seomse.trading'
 version '0.1.0'
 
@@ -16,7 +15,6 @@ dependencies {
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.+'
     implementation project(path: ':technical-analysis')
     implementation 'com.seomse.commons:seomse-commons:1.2.5'
-
 }
 
 test {
