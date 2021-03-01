@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 package com.seomse.trading.view;
-
+/**
+ * @author ccsweets
+ */
 public class LineData {
     double price;
     long time;

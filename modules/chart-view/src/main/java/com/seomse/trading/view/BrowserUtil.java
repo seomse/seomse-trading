@@ -20,7 +20,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.Collections;
-
+/**
+ * @author ccsweets
+ */
 public class BrowserUtil {
     /**
      * 크롬드라이버 정보

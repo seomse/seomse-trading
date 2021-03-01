@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 package com.seomse.trading.view;
-
+/**
+ * @author ccsweets
+ */
 public class MarkerData {
     /**
      * 마커 유형
      */
-    public static enum MarkerType{belowBar,aboveBar,inBar}
+    public enum MarkerType{belowBar,aboveBar,inBar}
 
     /**
      * 마커 모양
      */
-    public static enum MarkerShape{circle ,square , arrowUp , arrowDown }
+    public enum MarkerShape{circle ,square , arrowUp , arrowDown }
     private long time;
     private String color;
     private String text;

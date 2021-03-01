@@ -20,11 +20,13 @@ import com.seomse.commons.utils.time.DateUtil;
 import com.seomse.trading.technical.analysis.candle.CandleStick;
 
 import java.io.*;
-
+/**
+ * @author ccsweets
+ */
 public class TradingChart {
 
     /* 차트 데이터 타입 */
-    public enum ChartDateType {MINUTE,DAY}
+    public enum ChartDateType {MINUTE, DAY}
 
     /* 캔들 데이터 */
     CandleStick[] candleStickArr;
@@ -110,6 +112,7 @@ public class TradingChart {
                 """.formatted(width,height));
         createChartStr.append("candlestickSeries.setData([");
         int candleStickArrSize = candleStickArr.length;
+        //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < candleStickArrSize; i++) {
             CandleStick candleStick = candleStickArr[i];
             double open = candleStick.getOpen();
@@ -185,6 +188,7 @@ public class TradingChart {
                   volumeSeries.setData([
                 """.formatted(topMargin,bottomMargin));
         int volumeDataArrSize = volumeDataArr.length;
+        //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < volumeDataArrSize; i++) {
             VolumeData volumeData = volumeDataArr[i];
             String timeStr;
@@ -215,9 +219,10 @@ public class TradingChart {
                 }).setData([
                 """.formatted(color,size));
         int lineDataArrSize = lineDataArr.length;
+        //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < lineDataArrSize; i++) {
             LineData lineData = lineDataArr[i];
-            long openTime = lineData.getTime();
+//            long openTime = lineData.getTime();
             double price = lineData.getPrice();
 
 
@@ -247,6 +252,7 @@ public class TradingChart {
      * @return HTML
      */
     public String getHtml(){
+        //noinspection StringBufferReplaceableByString
         StringBuilder result = new StringBuilder("""
                 <!DOCTYPE html>
                 <html>

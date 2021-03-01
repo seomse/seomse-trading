@@ -141,7 +141,11 @@
             <version>1.2.5</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.seomse.tradings</groupId>
+            <artifactId>technical-analysis</artifactId>
+            <version>0.1.0</version>
+        </dependency>
 
     </dependencies>
 
