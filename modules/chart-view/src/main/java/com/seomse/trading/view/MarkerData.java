@@ -20,19 +20,21 @@ package com.seomse.trading.view;
 public class MarkerData {
     /**
      * 마커 유형
+     * lightweight-charts js 사용하는 변수그대로 이므로 소문자 사용
      */
     public enum MarkerType{belowBar,aboveBar,inBar}
 
     /**
      * 마커 모양
+     * lightweight-charts js 사용하는 변수그대로 이므로 소문자 사용
      */
     public enum MarkerShape{circle ,square , arrowUp , arrowDown }
-    private long time;
-    private String color;
-    private String text;
-    private String id;
-    private MarkerType markerType;
-    private MarkerShape markerShape;
+    private final long time;
+    private final String color;
+    private final String text;
+    private final String id;
+    private final MarkerType markerType;
+    private final MarkerShape markerShape;
 
     /**
      * 시간을 설정한다.
@@ -68,6 +70,7 @@ public class MarkerData {
 
     /**
      * 마커 유형을 얻는다.
+     * lightweight-charts js 사용하는 변수그대로 이므로 소문자 사용
      * @return 마커 유형
      */
     public MarkerType getMarkerType() {
@@ -76,6 +79,7 @@ public class MarkerData {
 
     /**
      * 마커 모양을 얻는다.
+     * lightweight-charts js 사용하는 변수그대로 이므로 소문자 사용
      * @return 마커모양
      */
     public MarkerShape getMarkerShape() {
