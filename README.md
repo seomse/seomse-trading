@@ -13,7 +13,8 @@
 - seomse-stock, seomse-bitcoin 프로젝트에서 사용됩니다.
 - 최근 주식 자동매매에 사용되기 위해 많은 기능이 업데이트 예정입니다
 - 위 패키지를 사용한 내용들이 기술블로그에 올라가고 있습니다.
-
+- technical-analysis 모듈에서 알고즘을 개발하고 chart-view 를 통해 테스트 합니다.
+- chart-view 는 트레이딩뷰에서 제공하는 lightweight-charts 를 사용합니다.
 
 # 구성
 - technical-analysis 
