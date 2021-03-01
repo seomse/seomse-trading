@@ -36,12 +36,8 @@
     view.addVolumeAll(volumeDataArray,0.8,0);
     view.addMarkerAll(markerDataArray);
     
-    /* HTML 결과 생성*/
-    String html = view.getHtml();
-    String filePath = createHtmlFile(html);
-    
-    /* File View */
-    BrowserUtil.loadChromeByFile(filePath);
+    /* Chart View */
+    view.view();
 ```
 
 
