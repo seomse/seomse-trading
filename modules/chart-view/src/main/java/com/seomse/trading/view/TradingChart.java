@@ -18,6 +18,8 @@ package com.seomse.trading.view;
 import com.seomse.commons.utils.FileUtil;
 import com.seomse.commons.utils.time.DateUtil;
 import com.seomse.trading.technical.analysis.candle.CandleStick;
+import com.seomse.trading.view.util.BrowserUtil;
+import com.seomse.trading.view.util.JarUtil;
 
 import java.io.*;
 /**
@@ -43,6 +45,9 @@ public class TradingChart {
     /* title */
     String browserTitle = "Seomse LightWeight-Chart View";
 
+    /* html file export path */
+    String exportPath = "data";
+
     /**
      * 브라우저 타이틀을 설정 한다.
      * @param  browserTitle browserTitle
@@ -67,8 +72,13 @@ public class TradingChart {
      */
     public TradingChart(CandleStick[] candleStickArr , int width , int height , ChartDateType dateType){
 
-        pureJsContents = FileUtil.getFileContents(new File("resources/pure.js"),"UTF-8");
-        lightWeightJsContents = FileUtil.getFileContents(new File("resources/lightweight-charts.standalone.production.js"),"UTF-8");
+        try {
+            pureJsContents = JarUtil.readFromJarFile("pure.js");
+            lightWeightJsContents = JarUtil.readFromJarFile("lightweight-charts.standalone.production.js");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         this.candleStickArr = candleStickArr;
         this.dateType = dateType;
         createChartStr.append( """
@@ -270,5 +280,38 @@ public class TradingChart {
         result.append("<script>\n").append(createChartStr.toString()).append("\n</script>\n");
 
         return result.append("</body></html>").toString();
+    }
+
+    /**
+     * 결과를 HTML 파일로 생성 한다.
+     * @return html file path
+     */
+    public String makeHtmlFile(){
+        return makeHtmlFile(DateUtil.getDateYmd(System.currentTimeMillis(),"yyyyMMddHHmmss") + ".html");
+    }
+
+    /**
+     * 결과를 HTML 파일로 생성 한다.
+     * @param exportFileName
+     * @return html file path
+     */
+    public String makeHtmlFile(String exportFileName){
+        File exportDir = new File(exportPath);
+        if(!exportDir.exists()){
+            exportDir.mkdir();
+        }
+        String exportFileFullPath = exportPath + "/" + exportFileName;
+        FileUtil.fileOutput(getHtml(),exportFileFullPath , false);
+        return exportFileFullPath;
+    }
+
+    /**
+     * 데이터를 브라우저로 확인 한다.
+     */
+    public void view(){
+        String exportFileFullPath = makeHtmlFile();
+        File viewHtmlFile = new File(exportFileFullPath);
+        String htmlFileAbsolutePath = viewHtmlFile.getAbsolutePath();
+        BrowserUtil.loadChromeByFile(htmlFileAbsolutePath);
     }
 }
