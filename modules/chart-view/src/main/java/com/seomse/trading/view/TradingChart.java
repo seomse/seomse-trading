@@ -23,6 +23,7 @@ import com.seomse.trading.view.util.JarUtil;
 
 import java.io.*;
 /**
+ * 트레이딩 차트
  * @author ccsweets
  */
 public class TradingChart {

@@ -15,6 +15,7 @@
  */
 package com.seomse.trading.view;
 /**
+ * 볼륨 정보
  * @author ccsweets
  */
 public class VolumeData {

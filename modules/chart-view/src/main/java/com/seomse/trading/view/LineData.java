@@ -15,6 +15,7 @@
  */
 package com.seomse.trading.view;
 /**
+ * 라인 정보
  * @author ccsweets
  */
 public class LineData {

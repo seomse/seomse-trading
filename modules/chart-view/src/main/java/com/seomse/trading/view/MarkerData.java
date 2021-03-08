@@ -15,6 +15,7 @@
  */
 package com.seomse.trading.view;
 /**
+ * 마커 정보
  * @author ccsweets
  */
 public class MarkerData {
