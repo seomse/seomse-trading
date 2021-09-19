@@ -1,12 +1,14 @@
 # seomse-trading
 
 # 개발환경
-- open jdk 15
+- open jdk 17
 
 # 개요
  - 기술적 분석
  - 트레이딩을 시작한다면 지금으로서는 가장 기본적인 모듈
  - 관련 모듈을 활용한 많은 연구일지들이 팀 기술블로그에 정리될 예정입니다.
+
+잠간 정체되었던 개발을 다시
 
 # gradle
 implementation 'com.seomse.trading:technical-analysis:0.1.0'
