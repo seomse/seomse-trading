@@ -21,6 +21,8 @@ import com.seomse.trading.TradeAdd;
 import com.seomse.trading.technical.analysis.candle.CandleTimeGap;
 import com.seomse.trading.technical.analysis.candle.TradeCandle;
 
+import java.math.BigDecimal;
+
 
 /**
  * trade 정보 추가용 (2번째 부터)
@@ -52,7 +54,7 @@ class NextTradeAdd implements TradeAdd {
             return;
         }
 
-        double lastPrice = tradeCandles.lastCandle.getClose();
+        BigDecimal lastPrice = tradeCandles.lastCandle.getClose();
 
         if(tradeCandles.isEmptyCandleContinue) {
             do {

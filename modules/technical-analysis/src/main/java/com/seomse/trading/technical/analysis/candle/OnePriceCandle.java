@@ -16,6 +16,8 @@
 
 package com.seomse.trading.technical.analysis.candle;
 
+import java.math.BigDecimal;
+
 /**
  * 단일가 캔들
  * 다이버전스에 활용됨
@@ -23,33 +25,33 @@ package com.seomse.trading.technical.analysis.candle;
  */
 public class OnePriceCandle implements Candle{
 
-    private final double price;
+    private final BigDecimal price;
 
     /**
      * 생성자
      * @param price 단일가
      */
-    public OnePriceCandle(double price){
+    public OnePriceCandle(BigDecimal price){
         this.price = price;    
     }
     
     @Override
-    public double getOpen() {
+    public BigDecimal getOpen() {
         return price;
     }
 
     @Override
-    public double getClose() {
+    public BigDecimal getClose() {
         return price;
     }
 
     @Override
-    public double getHigh() {
+    public BigDecimal getHigh() {
         return price;
     }
 
     @Override
-    public double getLow() {
+    public BigDecimal getLow() {
         return price;
     }
 }

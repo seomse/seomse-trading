@@ -16,6 +16,8 @@
 
 package com.seomse.trading;
 
+import java.math.BigDecimal;
+
 /**
  * 거래정보
  * @author macle
@@ -38,12 +40,12 @@ public class Trade {
     /**
      * 거래량
      */
-    private final double volume;
+    private final BigDecimal volume;
 
     /**
      * 가격
      */
-    private final double price;
+    private final BigDecimal price;
 
     /**
      * 시간
@@ -58,7 +60,7 @@ public class Trade {
      * @param volume double
      * @param time long
      */
-    public Trade(Type type, double price, double volume, long time ){
+    public Trade(Type type, BigDecimal price, BigDecimal volume, long time ){
         this.type = type;
         this.price = price;
         this.volume = volume;
@@ -77,7 +79,7 @@ public class Trade {
      * 거래량 얻기
      * @return double 거래량
      */
-    public double getVolume() {
+    public BigDecimal getVolume() {
         return volume;
     }
 
@@ -85,7 +87,7 @@ public class Trade {
      * 가격얻기
      * @return double 가격
      */
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 

@@ -20,6 +20,7 @@ import com.seomse.trading.Trade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,40 +36,40 @@ public class TradeCandle extends CandleStick {
     /**
      * 거래량
      */
-    private double volume = 0.0;
+    private BigDecimal volume = 0.0;
     /**
      * 매수량
      */
-    private double buyVolume = 0.0;
+    private BigDecimal buyVolume = 0.0;
 
     /**
      * 매도량
      */
-    private double sellVolume = 0.0;
+    private BigDecimal sellVolume = 0.0;
 
 
     /**
      * 평균가격 얻기
-     * @return double 평균가격
+     * @return  평균가격
      */
-    public double getAverage() {
+    public BigDecimal getAverage() {
         return priceTotal / volume;
     }
 
 
     /**
      * 거래량 얻기
-     * @return double 거래량
+     * @return  거래량
      */
-    public double getVolume() {
+    public BigDecimal getVolume() {
         return volume;
     }
 
     /**
      * 거래량 설정
-     * @param volume double 거래량
+     * @param volume  거래량
      */
-    public void setVolume(double volume) {
+    public void setVolume(BigDecimal volume) {
         this.volume = volume;
     }
 
@@ -78,7 +79,7 @@ public class TradeCandle extends CandleStick {
      */
     private int tradeCount = 0;
 
-    double priceTotal = 0.0;
+    BigDecimal priceTotal = 0.0;
     /**
      * 거래 정보 리스트
      */
@@ -149,8 +150,8 @@ public class TradeCandle extends CandleStick {
         setClose(endTrade.getPrice());
 
         volume = 0.0;
-        double high = firstTrade.getPrice();
-        double low = firstTrade.getPrice();
+        BigDecimal high = firstTrade.getPrice();
+        BigDecimal low = firstTrade.getPrice();
 
         for (Trade trade:
                 tradeList) {
@@ -179,25 +180,25 @@ public class TradeCandle extends CandleStick {
     }
 
     //100.0 == 100% , 500.0 == 500%
-    public static final double MAX_STRENGTH = 500.0;
+    public static final BigDecimal MAX_STRENGTH = new BigDecimal(500);
 
 
-    private Double strength = null;
+    private BigDecimal strength = null;
 
     /**
      * 체결강도 설정
      * @param strength 체결강도
      */
-    public void setStrength(Double strength) {
+    public void setStrength(BigDecimal strength) {
         this.strength = strength;
     }
 
     /**
      * 체결강도 얻기
      * max  MAX_STRENGTH
-     * @return double 체결 강도
+     * @return  체결 강도
      */
-    public double strength(){
+    public BigDecimal strength(){
 
         if(isEndTrade && strength != null){
             return strength;
@@ -212,7 +213,7 @@ public class TradeCandle extends CandleStick {
             return MAX_STRENGTH;
         }
 
-        double strength = buyVolume/sellVolume * 100.0;
+        BigDecimal strength = buyVolume/sellVolume * 100.0;
 
         if(strength > MAX_STRENGTH){
             this.strength = MAX_STRENGTH;

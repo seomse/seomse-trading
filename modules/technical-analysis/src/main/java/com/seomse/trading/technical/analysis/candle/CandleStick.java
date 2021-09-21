@@ -18,6 +18,9 @@ package com.seomse.trading.technical.analysis.candle;
 import com.seomse.trading.PriceChange;
 import com.seomse.trading.PriceChangeType;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+
 
 /**
  * 캔들 일반적인 캔들 요소들만 정의
@@ -37,7 +40,7 @@ public class CandleStick implements PriceChange, Candle {
         , LOWER_SHADOW //아래 그림자 캔들 -- 망치형(Hammer)저점 --  교수형(Hanging man)고점
         , HIGH_WAVE //위 아래에 그림자가 있는캔들 (긴거)
         , SPINNING_TOPS //위 아래에 그림자가 있는 캔들 (짧은거)
-        , @SuppressWarnings({"SpellCheckingInspection", "RedundantSuppression"}) DOJI // 십자캔들
+        , DOJI // 십자캔들
     }
     /**
      * 캔들 유형
@@ -55,24 +58,25 @@ public class CandleStick implements PriceChange, Candle {
 
     /**
      * 유형설정
-     * @param shortGap double 짧은 캔들 gap
-     * @param steadyGap double 보합세 gap
+     * @param shortGap  짧은 캔들 gap
+     * @param steadyGap  보합세 gap
      */
-    public void setType(double shortGap, double steadyGap){
+    public void setType(BigDecimal shortGap, BigDecimal steadyGap){
 
-        double height = getHeight();
+        BigDecimal height = getHeight();
         //길이가 보합세보다 작을때
-        if(height <= steadyGap){
+//        if(height <= steadyGap){
+        if(height.compareTo(steadyGap) <= 0){
             type = Type.STEADY;
             return;
         }
 
-        double absChange = Math.abs(change);
+        BigDecimal absChange = change.abs();
 
-        if(absChange < steadyGap){
+        if(absChange.compareTo(steadyGap) < 0){
             priceChangeType = PriceChangeType.HOLD;
         }else{
-            if(change > 0){
+            if(change.compareTo(BigDecimal.ZERO) > 0){
                 priceChangeType = PriceChangeType.RISE;
             }else{
                 priceChangeType = PriceChangeType.FALL;
@@ -80,60 +84,59 @@ public class CandleStick implements PriceChange, Candle {
         }
 
 
-        double upperShadow;
-        double lowerShadow;
+        BigDecimal upperShadow;
+        BigDecimal lowerShadow;
 
+        final BigDecimal decimal_2 = new BigDecimal(2);
 
-        if(change < 0){
-            upperShadow = high - open;
-            lowerShadow = close - low;
+        if(change.compareTo(BigDecimal.ZERO) < 0){
+            upperShadow = high.subtract(open);
+            lowerShadow = close.subtract(low);
         }else{
-            upperShadow = high - close;
-            lowerShadow = open - low;
+            upperShadow = high.subtract(close);
+            lowerShadow = open.subtract(low);
         }
 
         //위 그림자 캔들
-        if(upperShadow > lowerShadow
+        if(upperShadow.compareTo(lowerShadow) > 0
                 //위그림자가 아래꼬리보다 크고
-        && upperShadow > absChange
+        && upperShadow.compareTo(absChange) > 0
                //위그림자가 몸통보다 크고
-        && upperShadow >  steadyGap
+        && upperShadow.compareTo(steadyGap) > 0
                 //위그림자가 보합갭 보다 크고
         ){
-            if(lowerShadow < steadyGap){
+            if(lowerShadow.compareTo(steadyGap) < 0){
                 //아래그림자가 보합갭보다 짧으면
                 type = Type.UPPER_SHADOW;
                 return;
             }
 
-            double rate = upperShadow/lowerShadow;
-            if(rate > 2.0){
+            BigDecimal rate = upperShadow.divide(lowerShadow, MathContext.DECIMAL128 );
+            if(rate.compareTo(decimal_2) >= 0){
                 //위꼬리가 아래그림자보다 2배이상 길면
                 type = Type.UPPER_SHADOW;
                 return;
-
             }
-
         }
 
 
         //아래그림자 캔들
-        if(lowerShadow > upperShadow
+        if(lowerShadow.compareTo(upperShadow) > 0
                 //아래그림자가 위꼬리보다 크고
-        && lowerShadow > absChange
+        && lowerShadow.compareTo(absChange) > 0
                 //아래그림자가 몸통보다 크고
-        && lowerShadow > steadyGap
+        && lowerShadow.compareTo(steadyGap) > 0
                 //아래그림자가 보합보다 크고
         ){
-            if(upperShadow < steadyGap){
+            if(upperShadow.compareTo(steadyGap) < 0){
                 //위그림자가 보합갭보다 짧으면
                 type = Type.LOWER_SHADOW;
                 return;
             }
 
 
-            double rate = lowerShadow/upperShadow;
-            if(rate > 2.0){
+            BigDecimal rate = lowerShadow.divide(upperShadow, MathContext.DECIMAL128);
+            if(rate.compareTo(decimal_2) >= 2.0){
                 //아래그림자가 위꼬리보다 2배이상 길면
                 type = Type.LOWER_SHADOW;
                 return;
@@ -143,26 +146,26 @@ public class CandleStick implements PriceChange, Candle {
 
         //위 아래 그림자캔들
         if(
-                lowerShadow > absChange
+                lowerShadow.compareTo(absChange) > 0
                 //아래그림자가 몸통보다 길고
-                && upperShadow > absChange
+                && upperShadow.compareTo(absChange) > 0
                 //위그림자가 몸통보다 길고
-                && lowerShadow > steadyGap
+                && lowerShadow.compareTo(steadyGap) > 0
                 //아래그림자가 보합길이보다 길고
-                && upperShadow > steadyGap
+                && upperShadow.compareTo(steadyGap) > 0
                 // 위그림자가 보합길이보다 길고
         ){
 
-            if(absChange < steadyGap){
+            if(absChange.compareTo(steadyGap) < 0){
                 //몸통이 보합걸이보다 작으면
                 type = Type.DOJI;
                 return;
             }
 
-            double upperRate = upperShadow/absChange;
-            double lowerRate = lowerShadow/absChange;
+            BigDecimal upperRate = upperShadow.divide(absChange, MathContext.DECIMAL128);
+            BigDecimal lowerRate = lowerShadow.divide(absChange, MathContext.DECIMAL128);
 
-            if(upperRate > 2.0 && lowerRate > 2.0){
+            if(upperRate.compareTo(decimal_2) >= 0 && lowerRate.compareTo(decimal_2) >= 0){
                 // 위아래꼬리가 몸통보다 많이길면 길면
                 type = Type.HIGH_WAVE;
             }else{
@@ -174,7 +177,7 @@ public class CandleStick implements PriceChange, Candle {
 
         //유형을 정하지 못하고 이 부분까지 온경우
         //긴캔들 짧은캔들
-        if(absChange <= shortGap){
+        if(absChange.compareTo(shortGap) <= 0){
             //몸통길이가 sortGap 짧으면 짧은캔들
             type = Type.SHORT;
         }else{
@@ -207,146 +210,146 @@ public class CandleStick implements PriceChange, Candle {
     /**
      * 시가
      */
-    protected double open = -1.0;
+    protected BigDecimal open;
 
     /**
      * 종가
      */
-    protected double close = -1.0;
+    protected BigDecimal close;
 
 
     /**
      * 고가
      */
-    protected double high = -1.0;
+    protected BigDecimal high = null;
 
 
     /**
      * 저가
      */
-    protected double low = -1.0;
+    protected BigDecimal low = null;
 
     /**
      * 변화랑
      */
-    protected double change = -1.0;
+    protected BigDecimal change = null;
 
 
     /**
      * 가격 변화율
      */
-    protected Double changeRate = null;
+    protected BigDecimal changeRate = null;
 
     /**
      * 전 candle 가격
      */
-    protected double previous = -1.0;
+    protected BigDecimal previous = null;
 
 
     /**
      * 시가 얻기
      * 설정되지않으면 -1.0
-     * @return double 시가
+     * @return 시가
      */
-    public double getOpen() {
+    public BigDecimal getOpen() {
         return open;
     }
 
     /**
      * 시가 설정
-     * @param open double 시가
+     * @param open 시가
      */
-    public void setOpen(double open) {
+    public void setOpen(BigDecimal open) {
         this.open = open;
     }
 
     /**
      * 종가 얻기
-     * @return double 종가
+     * @return 종가
      */
-    public double getClose() {
+    public BigDecimal getClose() {
         return close;
     }
 
     /**
      * 종가 설정
-     * @param close double 종가
+     * @param close 종가
      */
-    public void setClose(double close) {
+    public void setClose(BigDecimal close) {
         this.close = close;
     }
 
     /**
      * 고가 얻기
-     * @return double 고가
+     * @return  고가
      */
-    public double getHigh() {
+    public BigDecimal getHigh() {
         return high;
     }
 
     /**
      * 고가 설정
-     * @param high double 고가
+     * @param high 고가
      */
-    public void setHigh(double high) {
+    public void setHigh(BigDecimal high) {
         this.high = high;
     }
 
     /**
      * 저가 얻기
-     * @return double 저가
+     * @return 저가
      */
-    public double getLow() {
+    public BigDecimal getLow() {
         return low;
     }
 
     /**
      * 저가 설정
-     * @param low double 저가
+     * @param low  저가
      */
-    public void setLow(double low) {
+    public void setLow(BigDecimal low) {
         this.low = low;
     }
 
 
     /**
      * 높이 얻기 (세로길이)
-     * @return double 높이(세로길이)
+     * @return 높이(세로길이)
      */
-    public double getHeight() {
-        return high - low;
+    public BigDecimal getHeight() {
+        return high.subtract(low);
     }
 
     /**
      * 변화가격 설정
-     * @param change double 변화가격
+     * @param change  변화가격
      */
-    public void setChange(double change) {
+    public void setChange(BigDecimal change) {
         this.change = change;
     }
 
     /**
      * 전봉가격 얻기
-     * @return double 전 봉 가격
+     * @return  전 봉 가격
      */
-    public double getPrevious() {
+    public BigDecimal getPrevious() {
         return previous;
     }
 
     /**
      * 전봉 가격 설정
-     * @param previous double 전봉가격
+     * @param previous  전봉가격
      */
-    public void setPrevious(double previous) {
+    public void setPrevious(BigDecimal previous) {
         this.previous = previous;
     }
 
     /**
      * 가격 변화량 얻기
      *
-     * @return double 변화량
+     * @return 변화량
      */
-    public double getChange() {
+    public BigDecimal getChange() {
         return change;
     }
 
@@ -354,45 +357,46 @@ public class CandleStick implements PriceChange, Candle {
      * 가격 변화율 설정
      * @param changeRate 가격변화율
      */
-    public void setChangeRate(Double changeRate) {
+    public void setChangeRate(BigDecimal changeRate) {
         this.changeRate = changeRate;
     }
 
 
     /**
      * 가격 변화량 절대값 얻기
-     * @return double 가격 변화량 절대값
+     * @return 가격 변화량 절대값
      */
-    public double changeAbs(){
-        return Math.abs(change);
+    public BigDecimal changeAbs(){
+        return change.abs();
     }
 
     /**
      * 가격 변화율 얻기
-     * @return double 가격 변화율
+     * 백분율 아님, 백분율로 사용하려면 * 100 해서 써야 함
+     * @return 가격 변화율
      */
-    public double getChangeRate(){
+    public BigDecimal getChangeRate(){
         if(isEndTrade && changeRate != null){
             return changeRate;
         }
-
-        changeRate =  change/previous * 100.0;
+        changeRate =  change.divide(previous, MathContext.DECIMAL128);
         return changeRate;
     }
 
     /**
      * 위꼬리 길이 얻기
-     * @return double 위 꼬리 길이
+     * @return 위 꼬리 길이
      */
-    public double getUpperTail(){
-        return high - Math.max(open, close);
+    public BigDecimal getUpperTail(){
+        return high.subtract(open.max(close));
+//        return high -  Math.max(open, close);
     }
 
     /**
      * 아래꼬리 길이 얻기
-     * @return double 아래 꼬리 길이
+     * @return 아래 꼬리 길이
      */
-    public double getLowerTail(){
+    public BigDecimal getLowerTail(){
         return Math.min(open, close) - low;
     }
 

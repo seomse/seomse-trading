@@ -16,16 +16,18 @@
 
 package com.seomse.trading;
 
+import java.math.BigDecimal;
+
 /**
  * 가격 변화 구현체
  * @author macle
  */
 public class PriceChangeImpl implements PriceChange{
 
-    double close;
-    double change;
-    double changeRate;
-    double previous;
+    BigDecimal close;
+    BigDecimal change;
+    BigDecimal changeRate;
+    BigDecimal previous;
 
 
     /**
@@ -36,10 +38,10 @@ public class PriceChangeImpl implements PriceChange{
      * @param previous 전일가
      */
     public PriceChangeImpl(
-             double close
-            , double change
-            , double changeRate
-            , double previous
+            BigDecimal close
+            , BigDecimal change
+            , BigDecimal changeRate
+            , BigDecimal previous
     ){
         this.close = close;
         this.change = change;
@@ -48,22 +50,22 @@ public class PriceChangeImpl implements PriceChange{
     }
 
     @Override
-    public double getClose() {
+    public BigDecimal getClose() {
         return close;
     }
 
     @Override
-    public double getChange() {
+    public BigDecimal getChange() {
         return change;
     }
 
     @Override
-    public double getChangeRate() {
+    public BigDecimal getChangeRate() {
         return changeRate;
     }
 
     @Override
-    public double getPrevious() {
+    public BigDecimal getPrevious() {
         return previous;
     }
 
