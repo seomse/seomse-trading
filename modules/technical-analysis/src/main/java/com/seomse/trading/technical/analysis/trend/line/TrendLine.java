@@ -15,8 +15,9 @@
  */
 package com.seomse.trading.technical.analysis.trend.line;
 
-
 import com.seomse.trading.technical.analysis.candle.TradeCandle;
+
+import java.math.BigDecimal;
 
 /**
  * 추세선
@@ -60,20 +61,20 @@ public class TrendLine {
      * @param candles TradeCandle[] 캔듭배열
      * @param index int 기준인덱스
      * @param leftCount int 좌측 건수
-     * @param shortGapRate double 짧은캔들 비율
+     * @param shortGapRate  짧은캔들 비율
      * @return double 기울기
      */
-    public double score(TradeCandle[] candles, int index, int leftCount, double shortGapRate ){
+    public BigDecimal score(TradeCandle[] candles, int index, int leftCount, BigDecimal shortGapRate ){
 
         if(index < 5){
             //기울기를 파악하려고하는 최소건수
-            return -1.0;
+            return null;
         }
 
         int minCount = (int)((double)leftCount*0.6);
 
         if(index < minCount){
-            return -1.0;
+            return null;
         }
 
         int startIndex = index - leftCount;
@@ -86,12 +87,12 @@ public class TrendLine {
 
 
         //평균 하락율 구하기
-        double changeRateSum = 0.0;
+        BigDecimal changeRateSum = BigDecimal.ZERO;
 
 
         for(int i=startIndex ; i<index ; i++){
 
-            changeRateSum += candles[i].getChangeRate();
+            changeRateSum = changeRateSum.add(candles[i].getChangeRate());
 
             if(!trendLineCase.isCountValid(candles[i])){
                continue;
@@ -99,7 +100,7 @@ public class TrendLine {
 
             //유효하면
             validCount++;
-            if(Math.abs(candles[i].getChangeRate()) > shortGapRate){
+            if(candles[i].getChangeRate().abs().compareTo(shortGapRate) > 0){
                 //종가가 shortGap보다 하락률이 클경우
                 shortGapCount++;
             }

@@ -16,11 +16,14 @@
 package com.seomse.trading.technical.analysis.pattern.lower.shadow;
 
 import com.seomse.trading.PriceChangeType;
+import com.seomse.trading.TradingBigDecimal;
 import com.seomse.trading.TrendChangeType;
 import com.seomse.trading.technical.analysis.candle.TradeCandle;
 import com.seomse.trading.technical.analysis.pattern.CandlePatternDefault;
 import com.seomse.trading.technical.analysis.pattern.CandlePatternPoint;
 import com.seomse.trading.technical.analysis.trend.line.TrendLine;
+
+import java.math.BigDecimal;
 
 /**
  * 망치형 캔들
@@ -48,20 +51,20 @@ public class HammerPattern extends CandlePatternDefault {
     }
 
     @Override
-    public CandlePatternPoint getPoint(TradeCandle[] candles, int index, double shortGapRate){
+    public CandlePatternPoint getPoint(TradeCandle[] candles, int index, BigDecimal shortGapRate){
 
         TradeCandle tradeCandle = candles[index];
 
 
         //시점의 가격이 마지막 가격보다 낮으면 음봉
-        if(tradeCandle.getOpen() > tradeCandle.getClose()){
+        if(tradeCandle.getOpen().compareTo(tradeCandle.getClose()) > 0){
             //양봉이 아니면
             //망치형 캔들은 정확도 높지않아서 양봉이 아니면 무효화 시키는게 좋을것 같음
             return null;
         }
 
         //몸통이 약간은 있어야하므로 너무작은경우 체크 추가
-        if(Math.abs(tradeCandle.getChangeRate()) * 2 < shortGapRate){
+        if(tradeCandle.getChangeRate().multiply(TradingBigDecimal.DECIMAL_2).compareTo(shortGapRate) < 0){
             //몸통길이가 짧은 캔들 기준값을 절반은 되어야함
             return null;
         }

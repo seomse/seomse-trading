@@ -22,11 +22,11 @@ import com.seomse.trading.technical.analysis.candle.CandleTimeGap;
 import com.seomse.trading.technical.analysis.candle.TradeCandle;
 import com.seomse.trading.technical.analysis.candle.candles.TradeCandles;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -48,7 +48,7 @@ public class CandleManagerExample {
         //noinspection TryFinallyCanBeTryWithResources
         try{
 
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(tradeFilePath))));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(tradeFilePath)));
 
             while ((line = br.readLine()) != null) {
 
@@ -68,11 +68,7 @@ public class CandleManagerExample {
 
                 long time =  Long.parseLong(values[1]);
 
-                double price = Double.parseDouble(values[2]);
-
-                double volume = Double.parseDouble(values[3]);
-
-                Trade trade = new Trade(type, price, volume, time);
+                Trade trade = new Trade(type, new BigDecimal(values[2]), new BigDecimal(values[3]), time);
 
                 candleManager.addTrade(trade);
 
@@ -93,12 +89,17 @@ public class CandleManagerExample {
         CandleManager candleManager = makeCandleManager();
         TradeCandles TradeCandles = candleManager.getCandles(Times.MINUTE_10);
         TradeCandle[] candles = TradeCandles.getCandles();
+
+        //0.5%
+        BigDecimal shortDecimal = new BigDecimal("0.005");
+        BigDecimal steadyDecimal =  new BigDecimal("0.002");
+
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i<candles.length ; i++) {
 
-            //0.5%
-            double shortGap = candles[i].getOpen()*0.5;
-            double steadyGap = candles[i].getOpen()*0.2;
+
+            BigDecimal shortGap = candles[i].getOpen().multiply(shortDecimal);
+            BigDecimal steadyGap = candles[i].getOpen().multiply(steadyDecimal);
 
             candles[i].setType(shortGap,steadyGap );
 

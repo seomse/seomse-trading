@@ -11,9 +11,9 @@
 잠간 정체되었던 개발을 다시
 
 # gradle
-implementation 'com.seomse.trading:technical-analysis:0.1.0'
+implementation 'com.seomse.trading:technical-analysis:0.1.1'
 - etc
-    - https://mvnrepository.com/artifact/com.seomse.trading/technical-analysis/0.1.0
+    - https://mvnrepository.com/artifact/com.seomse.trading/technical-analysis/0.1.1
 
 # communication
 ### blog, homepage

@@ -397,7 +397,10 @@ public class CandleStick implements PriceChange, Candle {
      * @return 아래 꼬리 길이
      */
     public BigDecimal getLowerTail(){
-        return Math.min(open, close) - low;
+
+        return open.max(close).subtract(low);
+
+//        return Math.min(open, close) - low;
     }
 
 

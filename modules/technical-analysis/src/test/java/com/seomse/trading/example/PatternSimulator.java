@@ -24,6 +24,8 @@ import com.seomse.trading.technical.analysis.pattern.lower.shadow.HammerPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+
 /**
  * 패턴 시뮬레이터
  * @author macle
@@ -51,21 +53,21 @@ public class PatternSimulator {
             if(time < Times.HOUR_4) {
 
                 //0.2% 보합
-                tradeCandles.setSteadyGapRatio(0.002);
+                tradeCandles.setSteadyGapRatio(new BigDecimal("0.002"));
                 //0.5% 짧은 캔들 기준은 0.5%
-                tradeCandles.setShortGapRatio(0.005);
+                tradeCandles.setShortGapRatio(new BigDecimal("0.005"));
             }else if(time < Times.HOUR_12) {
 
                 //0.2% 보합
-                tradeCandles.setSteadyGapRatio(0.002);
+                tradeCandles.setSteadyGapRatio(new BigDecimal("0.002"));
                 //1.5% 짧은 캔들 기준은 1.5%
-                tradeCandles.setShortGapRatio(0.015);
+                tradeCandles.setShortGapRatio(new BigDecimal("0.015"));
             }else{
 
                 //0.5% 보합
-                tradeCandles.setSteadyGapRatio(0.005);
-                //3% 짧은 캔들 기준은 0.5%
-                tradeCandles.setShortGapRatio(0.03);
+                tradeCandles.setSteadyGapRatio(new BigDecimal("0.005"));
+                //3% 짧은 캔들 기준은 0.3%
+                tradeCandles.setShortGapRatio(new BigDecimal("0.003"));
             }
             tradeCandles.setCandleType();
 
@@ -109,7 +111,7 @@ public class PatternSimulator {
 
                 TradeCandle nextCandle =  candles[candleIndex+1];
                 pattenCount++;
-                if(patternCandle.getClose() < nextCandle.getClose()){
+                if(patternCandle.getClose().compareTo( nextCandle.getClose()) < 0 ){
                     upCount++;
 
                     logger.info("패턴 성공: " + patternCandle.getCloseTime() + ", " + patternCandle.getClose() + ", " + nextCandle.getClose());

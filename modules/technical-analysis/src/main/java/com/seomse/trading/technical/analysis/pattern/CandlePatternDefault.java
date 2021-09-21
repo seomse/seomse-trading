@@ -20,6 +20,7 @@ import com.seomse.trading.technical.analysis.candle.TradeCandle;
 import com.seomse.trading.technical.analysis.candle.candles.CandleChangeObserver;
 import com.seomse.trading.technical.analysis.candle.candles.TradeCandles;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,8 +159,8 @@ public abstract class CandlePatternDefault implements CandlePattern{
      * 패턴결과 패턴이 유효하지 않을경우 null 을 리턴
      * @param candles TradeCandle [] 캔들 배열
      * @param index int 기준위치
-     * @param shortGapRate double 짧은 캔들 기준 비율
+     * @param shortGapRate 짧은 캔들 기준 비율
      * @return CandlePatternPoint 패턴결과
      */
-    public abstract CandlePatternPoint getPoint(TradeCandle [] candles, int index, double shortGapRate);
+    public abstract CandlePatternPoint getPoint(TradeCandle [] candles, int index, BigDecimal shortGapRate);
 }

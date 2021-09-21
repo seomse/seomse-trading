@@ -17,10 +17,12 @@
 package com.seomse.trading.technical.analysis.candle;
 
 import com.seomse.trading.Trade;
+import com.seomse.trading.TradingBigDecimal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,16 +38,17 @@ public class TradeCandle extends CandleStick {
     /**
      * 거래량
      */
-    private BigDecimal volume = 0.0;
+    private BigDecimal volume = BigDecimal.ZERO;
+
     /**
      * 매수량
      */
-    private BigDecimal buyVolume = 0.0;
+    private BigDecimal buyVolume = BigDecimal.ZERO;
 
     /**
      * 매도량
      */
-    private BigDecimal sellVolume = 0.0;
+    private BigDecimal sellVolume = BigDecimal.ZERO;
 
 
     /**
@@ -53,7 +56,7 @@ public class TradeCandle extends CandleStick {
      * @return  평균가격
      */
     public BigDecimal getAverage() {
-        return priceTotal / volume;
+        return priceTotal.divide(volume, MathContext.DECIMAL128);
     }
 
 
@@ -79,7 +82,7 @@ public class TradeCandle extends CandleStick {
      */
     private int tradeCount = 0;
 
-    BigDecimal priceTotal = 0.0;
+    BigDecimal priceTotal = BigDecimal.ZERO;
     /**
      * 거래 정보 리스트
      */
@@ -99,9 +102,9 @@ public class TradeCandle extends CandleStick {
             low = trade.getPrice();
         }else{
 
-            if(high < trade.getPrice()){
+            if(high.compareTo(trade.getPrice()) < 0){
                 high = trade.getPrice();
-            } else if(low > trade.getPrice()){
+            } else if(low.compareTo(trade.getPrice()) > 0){
                 low =  trade.getPrice();
             }
             setClose(trade.getPrice());
@@ -110,13 +113,13 @@ public class TradeCandle extends CandleStick {
         tradeCount = tradeList.size();
 
         if(trade.getType() == Trade.Type.BUY){
-            buyVolume+=trade.getVolume();
+            buyVolume = buyVolume.add(trade.getVolume());
         }else{
-            sellVolume+=trade.getVolume();
+            sellVolume = sellVolume.add(trade.getVolume());
         }
 
-        volume += trade.getVolume();
-        priceTotal += trade.getVolume() * trade.getPrice();
+        volume = volume.add(trade.getVolume());
+        priceTotal = priceTotal.add(trade.getVolume().multiply(trade.getPrice()));
     }
 
     /**
@@ -138,7 +141,7 @@ public class TradeCandle extends CandleStick {
             return;
         }
 
-        priceTotal = 0.0;
+        priceTotal = BigDecimal.ZERO;
 
         tradeCount = tradeList.size();
 
@@ -149,30 +152,27 @@ public class TradeCandle extends CandleStick {
         setOpen(firstTrade.getPrice());
         setClose(endTrade.getPrice());
 
-        volume = 0.0;
+        volume = BigDecimal.ZERO;
         BigDecimal high = firstTrade.getPrice();
         BigDecimal low = firstTrade.getPrice();
 
-        for (Trade trade:
-                tradeList) {
+        for (Trade trade: tradeList) {
 
-            volume += trade.getVolume();
+            volume = volume.add(trade.getVolume());
+            priceTotal = priceTotal.add(trade.getVolume().multiply(trade.getPrice()));
 
-
-            priceTotal += trade.getVolume() * trade.getPrice();
-
-            if(high < trade.getPrice()){
+            if(high.compareTo(trade.getPrice()) < 0){
                 high = trade.getPrice();
             }
 
-            if(low > trade.getPrice()){
+            if(low.compareTo(trade.getPrice()) > 0){
                 low =  trade.getPrice();
             }
 
             if(trade.getType() == Trade.Type.BUY){
-                buyVolume+=trade.getVolume();
+                buyVolume = buyVolume.add(trade.getVolume());
             }else{
-                sellVolume+=trade.getVolume();
+                sellVolume = sellVolume.add(trade.getVolume());
             }
         }
         setHigh(high);
@@ -204,24 +204,23 @@ public class TradeCandle extends CandleStick {
             return strength;
         }
 
-        if(sellVolume == 0 && buyVolume == 0){
-            return 100.0;
+        if(sellVolume == null && buyVolume == null){
+            return BigDecimal.ONE;
         }
 
-        if(sellVolume <= 0){
+        if(sellVolume == null || sellVolume.compareTo(BigDecimal.ZERO) == 0){
             //500%
             return MAX_STRENGTH;
         }
 
-        BigDecimal strength = buyVolume/sellVolume * 100.0;
+        BigDecimal strength = buyVolume.divide(sellVolume, MathContext.DECIMAL128).multiply(TradingBigDecimal.DECIMAL_100);
 
-        if(strength > MAX_STRENGTH){
+        if(strength.compareTo(MAX_STRENGTH) > 0){
             this.strength = MAX_STRENGTH;
             return MAX_STRENGTH;
         }
 
         this.strength = strength;
-
         return strength;
     }
 
