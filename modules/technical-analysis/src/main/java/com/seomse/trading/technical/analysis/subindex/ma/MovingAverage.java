@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Seomse Inc.
+ * Copyright (C) 2021 Seomse Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ public class MovingAverage {
     public static double[] getArray(Candle[] candles, int n, int averageCount) {
         return getArray(CandleDoubleChange.getCloseArray(candles), n, averageCount);
     }
+
     /**
      * 평균 배열 얻기
      *

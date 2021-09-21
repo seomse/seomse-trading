@@ -234,8 +234,8 @@ public class IchimokuBalance {
             double maxPrice = -1;
             double minPrice = Integer.MAX_VALUE;
             for (int j = i-n; j < i ; j++) {
-                double highPrice = candleStickArray[j].getHigh();
-                double lowPrice = candleStickArray[j].getLow();
+                double highPrice = candleStickArray[j].getHigh().doubleValue();
+                double lowPrice = candleStickArray[j].getLow().doubleValue();
                 if( highPrice > maxPrice) {
                     maxPrice = highPrice;
                 }
@@ -257,7 +257,7 @@ public class IchimokuBalance {
     public static double[] getLaggingArray(CandleStick[] candleStickArray) {
         double [] laggingArray = new double[candleStickArray.length];
         for (int i = 0; i < candleStickArray.length; i++) {
-            laggingArray[i] = candleStickArray[i].getClose();
+            laggingArray[i] = candleStickArray[i].getClose().doubleValue();
         }
         return laggingArray;
     }

@@ -22,6 +22,8 @@ import com.seomse.trading.technical.analysis.pattern.CandlePatternDefault;
 import com.seomse.trading.technical.analysis.pattern.CandlePatternPoint;
 import com.seomse.trading.technical.analysis.trend.line.TrendLine;
 
+import java.math.BigDecimal;
+
 
 /**
  * 역망치형캔들
@@ -46,20 +48,19 @@ public class InvertedHammerPattern extends CandlePatternDefault {
 
 
     @Override
-    public CandlePatternPoint getPoint(TradeCandle[] candles, int index, double shortGapRate) {
+    public CandlePatternPoint getPoint(TradeCandle[] candles, int index, BigDecimal shortGapRate) {
 
         TradeCandle tradeCandle = candles[index];
 
 
         //시점의 가격이 마지막 가격보다 낮으면 음봉
-        if(tradeCandle.getOpen() > tradeCandle.getClose()){
+        if(tradeCandle.getOpen().compareTo(tradeCandle.getClose()) > 0){
             //양봉이 아니면
             return null;
         }
 
         TrendLine trendLine = new TrendLine(TrendLine.Type.DOWN);
 
-//        double downTrendLineScore= trendLine.score(candles, index, 7 , shortGapPercent);
         return UpperShadowPattern.makePoint(trendLine,candles,index, shortGapRate);
     }
 

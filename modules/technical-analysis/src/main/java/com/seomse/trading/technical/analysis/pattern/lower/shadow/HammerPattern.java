@@ -70,8 +70,6 @@ public class HammerPattern extends CandlePatternDefault {
         }
 
         TrendLine trendLine = new TrendLine(TrendLine.Type.DOWN);
-
-        double downTrendLineScore= trendLine.score(candles, index, 7 , shortGapRate);
         return LowerShadowPattern.makePoint(trendLine,candles,index, shortGapRate);
     }
 }

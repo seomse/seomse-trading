@@ -16,11 +16,14 @@
 package com.seomse.trading.technical.analysis.pattern.upper.shadow;
 
 import com.seomse.trading.PriceChangeType;
+import com.seomse.trading.TradingBigDecimal;
 import com.seomse.trading.TrendChangeType;
 import com.seomse.trading.technical.analysis.candle.TradeCandle;
 import com.seomse.trading.technical.analysis.pattern.CandlePatternDefault;
 import com.seomse.trading.technical.analysis.pattern.CandlePatternPoint;
 import com.seomse.trading.technical.analysis.trend.line.TrendLine;
+
+import java.math.BigDecimal;
 
 
 /**
@@ -45,34 +48,32 @@ public class ShootingStarRise extends CandlePatternDefault {
 
 
     @Override
-    public CandlePatternPoint getPoint(TradeCandle[] candles, int index, double shortGapRate) {
+    public CandlePatternPoint getPoint(TradeCandle[] candles, int index, BigDecimal shortGapRate) {
 
         TradeCandle tradeCandle = candles[index];
 
 
         //시점의 가격이 마지막 가격보다 낮으면 음봉
-        if(tradeCandle.getOpen() > tradeCandle.getClose()){
+        if(tradeCandle.getOpen().compareTo(tradeCandle.getClose()) > 0){
             //양봉이 아니면
             return null;
         }
 
-        if(Math.abs(tradeCandle.getChangeRate()) > shortGapRate){
+        if(tradeCandle.getChangeRate().abs().compareTo(shortGapRate) > 0){
             //몸통은 짧은캔들보다 작아야함
             return null;
         }
 
-        double change = tradeCandle.changeAbs();
-        double upperTail = tradeCandle.getUpperTail();
+        BigDecimal change = tradeCandle.changeAbs();
+        BigDecimal upperTail = tradeCandle.getUpperTail();
 
-        double shortGapPrice = tradeCandle.getOpen()* shortGapRate;
-        if(shortGapPrice*4.0 < upperTail){
+        BigDecimal shortGapPrice = tradeCandle.getOpen().multiply(shortGapRate) ;
+        if(shortGapPrice.multiply(TradingBigDecimal.DECIMAL_4).compareTo(upperTail) < 0){
             //위꼬리가 너무 길면 유효하지 않음
             return null;
         }
 
         TrendLine trendLine = new TrendLine(TrendLine.Type.UP);
-
-        double downTrendLineScore= trendLine.score(candles, index, 7 , shortGapRate);
         return UpperShadowPattern.makePoint(trendLine,candles,index, shortGapRate);
     }
 

@@ -22,6 +22,8 @@ import com.seomse.trading.technical.analysis.pattern.CandlePatternDefault;
 import com.seomse.trading.technical.analysis.pattern.CandlePatternPoint;
 import com.seomse.trading.technical.analysis.trend.line.TrendLine;
 
+import java.math.BigDecimal;
+
 /**
  * 교수형 캔들
  * 상승세의 고점에서 출현해야만 하고 꼬리 길이에 비해 ㅁ몸통 크기가 적가나 반대로 꼬리 길이에 비해 몸통
@@ -48,10 +50,10 @@ public class HangingMan extends CandlePatternDefault {
      * 캔들의 배열이 바뀔 수 있으므로 array 로 직접 받음
      * @param candles TradeCandle [] 캔들 배열
      * @param index int 기준위치
-     * @param shortGapRate double 짧은 캔들 기준 확률
+     * @param shortGapRate 짧은 캔들 기준 확률
      * @return CandlePatternPoint 패턴결과
      */
-    public CandlePatternPoint getPoint(TradeCandle[] candles, int index, double shortGapRate){
+    public CandlePatternPoint getPoint(TradeCandle[] candles, int index, BigDecimal shortGapRate){
         TrendLine trendLine = new TrendLine(TrendLine.Type.UP);
         return LowerShadowPattern.makePoint(trendLine,candles,index, shortGapRate);
     }

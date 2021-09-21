@@ -65,7 +65,7 @@ public class RegularDivergence implements DivergenceSignalSearch {
         int end = priceLowIndexes.length -1;
         for (int i = priceLowIndexes.length -1; i >0 ; i--) {
             //주가의 저점이 하락하고 있는구간
-            if(priceCandles[priceLowIndexes[i-1]].getLow() < priceCandles[priceLowIndexes[i]].getLow()){
+            if(priceCandles[priceLowIndexes[i-1]].getLow().doubleValue() < priceCandles[priceLowIndexes[i]].getLow().doubleValue() ){
                 // 주가의 저점이 상승 했다면 하락 구간이 아님
                
                 int start = i;
@@ -105,11 +105,11 @@ public class RegularDivergence implements DivergenceSignalSearch {
                 start = 0;
             }
 
-            double low = candles[i].getLow();
+            double low = candles[i].getLow().doubleValue() ;
 
 
             for (int j = start; j < i ; j++) {
-                if(low > candles[i].getLow()){
+                if(low > candles[i].getLow().doubleValue() ){
                     continue outer;
                 }
 

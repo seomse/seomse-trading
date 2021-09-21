@@ -18,6 +18,8 @@ package com.seomse.trading.technical.analysis.pattern;
 
 import com.seomse.trading.technical.analysis.candle.TradeCandle;
 
+import java.math.BigDecimal;
+
 /**
  * 캔들패턴 발생지점
  * @author macle
@@ -27,14 +29,14 @@ public class CandlePatternPoint {
     public static final CandlePatternPoint[] EMPTY_POINT = new CandlePatternPoint[0];
 
     private final TradeCandle candle;
-    private final double score;
+    private final BigDecimal score;
 
     /**
      * 생성자
      * @param candle TradeCandle 캔들
      * @param score double 점수
      */
-    public CandlePatternPoint(TradeCandle candle, double score){
+    public CandlePatternPoint(TradeCandle candle, BigDecimal score){
         this.candle = candle;
         this.score = score;
 
@@ -52,7 +54,7 @@ public class CandlePatternPoint {
      * 점수 얻기
      * @return double 점수
      */
-    public double getScore() {
+    public BigDecimal getScore() {
         return score;
     }
 }

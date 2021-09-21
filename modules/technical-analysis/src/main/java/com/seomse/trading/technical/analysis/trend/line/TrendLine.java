@@ -18,6 +18,7 @@ package com.seomse.trading.technical.analysis.trend.line;
 import com.seomse.trading.technical.analysis.candle.TradeCandle;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 
 /**
  * 추세선
@@ -61,8 +62,8 @@ public class TrendLine {
      * @param candles TradeCandle[] 캔듭배열
      * @param index int 기준인덱스
      * @param leftCount int 좌측 건수
-     * @param shortGapRate  짧은캔들 비율
-     * @return double 기울기
+     * @param shortGapRate 짧은캔들 비율
+     * @return 기울기
      */
     public BigDecimal score(TradeCandle[] candles, int index, int leftCount, BigDecimal shortGapRate ){
 
@@ -110,17 +111,17 @@ public class TrendLine {
 
         if(validCount < minCount || shortGapCount < minShortCount) {
             //건수 유효성성
-            return -1.0;
+            return null;
         }
 
         int count = index - startIndex;
 
 
-        double avg = Math.abs(changeRateSum)/(double)(count);
-        double half = shortGapRate*0.5;
+        BigDecimal avg = changeRateSum.abs().divide(new BigDecimal(count), MathContext.DECIMAL128);
+        BigDecimal half = shortGapRate*0.5;
 
-        if(half >  avg){
-            return -1.0;
+        if(half.compareTo(avg) > 0 ){
+            return null;
         }
 
         return Math.abs(candles[index-1].getClose() - candles[startIndex].getOpen()) / half*(double)count;

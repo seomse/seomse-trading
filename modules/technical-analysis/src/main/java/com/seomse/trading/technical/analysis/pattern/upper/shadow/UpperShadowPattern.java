@@ -15,10 +15,14 @@
  */
 package com.seomse.trading.technical.analysis.pattern.upper.shadow;
 
+import com.seomse.trading.TradingBigDecimal;
 import com.seomse.trading.technical.analysis.candle.CandleStick;
 import com.seomse.trading.technical.analysis.candle.TradeCandle;
 import com.seomse.trading.technical.analysis.pattern.CandlePatternPoint;
 import com.seomse.trading.technical.analysis.trend.line.TrendLine;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 /**
  * 외 그림자 캔들
@@ -41,18 +45,18 @@ public class UpperShadowPattern {
         //몸통길이 계산하기
         //몸통길이는 종가 - 시가
         //몸통 길이 (변화량의 절대값)
-        double change = tradeCandle.changeAbs();
+       BigDecimal change = tradeCandle.changeAbs();
 
         // 아래그림자와 다르게 위그림자 캔들은 몸통이 짧아야 하므로 비율을 좀더 준다
-        double upperTail = tradeCandle.getUpperTail();
-        if(change*2.5 > upperTail){
+       BigDecimal upperTail = tradeCandle.getUpperTail();
+        if(change.multiply(TradingBigDecimal.DECIMAL_2_5).compareTo(upperTail) > 0){
             //위꼬리가 몸통의 2.5배보다 커야한다
             return false;
         }
 
-        double lowerTail = tradeCandle.getLowerTail();
+       BigDecimal lowerTail = tradeCandle.getLowerTail();
         //noinspection RedundantIfStatement
-        if(lowerTail*2 > change ){
+        if(lowerTail.multiply(TradingBigDecimal.DECIMAL_2).compareTo(change) > 0 ){
             //아래꼬리는 몸통보다 2배이상 작아야한다.
             return false;
         }
@@ -69,7 +73,7 @@ public class UpperShadowPattern {
      * @param shortGapPercent double 짧은 캔들 기준 확률
      * @return CandlePatternPoint 패턴 발생 여부 및 정형점수 ( 발생하지 않을경우 null)
      */
-   public static CandlePatternPoint makePoint(TrendLine trendLine, TradeCandle[] candles, int index, double shortGapPercent){
+   public static CandlePatternPoint makePoint(TrendLine trendLine, TradeCandle[] candles, int index, BigDecimal shortGapPercent){
 
         TradeCandle tradeCandle = candles[index];
 
@@ -77,27 +81,31 @@ public class UpperShadowPattern {
             return null;
         }
 
-        double trendLineScore = trendLine.score(candles, index, 7 , shortGapPercent);
+       BigDecimal trendLineScore = trendLine.score(candles, index, 7 , shortGapPercent);
 
-        if(trendLineScore < 1.0){
+        if(trendLineScore == null){
+            return null;
+        }
+
+        if(trendLineScore.compareTo(BigDecimal.ONE) < 0){
             //1.0 미만일 경우는 추세 무효
             return null;
         }
 
        //추세(상승 or 하락) 점수 최대 가중치 1.5점
-        if(trendLineScore > 1.5){
-            trendLineScore = 1.5;
+        if(trendLineScore.compareTo(TradingBigDecimal.DECIMAL_1_5) > 0){
+            trendLineScore = TradingBigDecimal.DECIMAL_1_5;
         }
 
         //몸통길이 계산하기
         //몸통길이는 종가 - 시가
         //몸통 길이 (변화량의 절대값)
-        double absChange = tradeCandle.changeAbs();
+       BigDecimal absChange = tradeCandle.changeAbs();
 
-        double upperTail = tradeCandle.getUpperTail();
+       BigDecimal upperTail = tradeCandle.getUpperTail();
 
-        double score = upperTail/(absChange*2.0) * trendLineScore;
-        return new CandlePatternPoint(candles[index], score);
+       BigDecimal score = upperTail.divide(absChange.multiply(TradingBigDecimal.DECIMAL_2), MathContext.DECIMAL128).multiply(trendLineScore);
+       return new CandlePatternPoint(candles[index], score);
    }
 
 }

@@ -389,7 +389,6 @@ public class CandleStick implements PriceChange, Candle {
      */
     public BigDecimal getUpperTail(){
         return high.subtract(open.max(close));
-//        return high -  Math.max(open, close);
     }
 
     /**
@@ -399,8 +398,6 @@ public class CandleStick implements PriceChange, Candle {
     public BigDecimal getLowerTail(){
 
         return open.max(close).subtract(low);
-
-//        return Math.min(open, close) - low;
     }
 
 

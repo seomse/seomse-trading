@@ -16,11 +16,14 @@
 package com.seomse.trading.technical.analysis.pattern.upper.shadow;
 
 import com.seomse.trading.PriceChangeType;
+import com.seomse.trading.TradingBigDecimal;
 import com.seomse.trading.TrendChangeType;
 import com.seomse.trading.technical.analysis.candle.TradeCandle;
 import com.seomse.trading.technical.analysis.pattern.CandlePatternDefault;
 import com.seomse.trading.technical.analysis.pattern.CandlePatternPoint;
 import com.seomse.trading.technical.analysis.trend.line.TrendLine;
+
+import java.math.BigDecimal;
 
 
 /**
@@ -37,8 +40,6 @@ import com.seomse.trading.technical.analysis.trend.line.TrendLine;
  * @author macle
  */
 public class ShootingStar extends CandlePatternDefault {
-
-
 
     @Override
     public PriceChangeType getPriceChangeType() {
@@ -57,12 +58,12 @@ public class ShootingStar extends CandlePatternDefault {
      * @param shortGapRate 짧은 캔들 기준 확률
      * @return 패턴결과
      */
-    public CandlePatternPoint getPoint(TradeCandle[] candles, int index, double shortGapRate){
+    public CandlePatternPoint getPoint(TradeCandle[] candles, int index, BigDecimal shortGapRate){
         TradeCandle tradeCandle = candles[index];
 
         //음봉이어야하고
         //시점의 가격이 마지막 가격보다 낮으면 음봉
-        if(tradeCandle.getOpen() < tradeCandle.getClose()){
+        if(tradeCandle.getOpen().compareTo( tradeCandle.getClose()) < 0){
             //음봉이 아니면
             return null;
         }
@@ -70,17 +71,17 @@ public class ShootingStar extends CandlePatternDefault {
 
         //위꼬리가 많이 길어야함
         //위꼬리가 몸통의 3배 이상인경우로 한다
-        double change = tradeCandle.changeAbs();
+        BigDecimal change = tradeCandle.changeAbs();
 
         // 아래그림자와 다르게 위그림자 캔들은 몸통이 짧아야 하므로 비율을 좀더 준다
-        double upperTail = tradeCandle.getUpperTail();
-        if(change*3.0 > upperTail){
+        BigDecimal upperTail = tradeCandle.getUpperTail();
+        if(change.multiply(TradingBigDecimal.DECIMAL_3).compareTo(upperTail) > 0){
             //위꼬리가 몸통의 3배보다 커야한다
             return null;
         }
 
-        double shortGapPrice = tradeCandle.getOpen()* shortGapRate;
-        if(shortGapPrice*2.0 > upperTail){
+        BigDecimal shortGapPrice = tradeCandle.getOpen().multiply(shortGapRate) ;
+        if(shortGapPrice.multiply(TradingBigDecimal.DECIMAL_2).compareTo(upperTail) > 0){
             //위꼬리가 짧은 기준의 2배보다 커야한다
             return null;
         }
