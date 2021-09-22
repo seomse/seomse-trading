@@ -1,4 +1,9 @@
 # seomse-trading
+
+이후 개발은 아래 레파지토리에서 진행합니다. 자산관리 관련 모든 부분은 runon쪽 프로젝트로 진행합니다.
+
+https://github.com/runonio/trading
+
 잠간 정체되었던 개발을 다시 진행되고 있습니다. 코인쪽 개발을 해보니 숫자형관련 부분을 BigDecimal 로 사용하는게 필수여서 모든 double 형 변수를 BigDecimal 로 변환하고 있습니다.
 
 단 이전에 작업 해 놓은게 너무 많아서 당장 사용하는 소스부터 변환 하고 있습니다.

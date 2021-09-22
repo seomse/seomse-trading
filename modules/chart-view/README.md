@@ -1,5 +1,7 @@
 # seomse-trading
+이후 개발은 아래 레파지토리에서 진행합니다. 자산관리 관련 모든 부분은 runon쪽 프로젝트로 진행합니다.
 
+https://github.com/runonio/trading
 ## 개발환경
 - open jdk 15
 
@@ -52,10 +54,9 @@ implementation 'com.seomse.trading:chart-view:0.1.2'
 # communication
 ### blog, homepage
 - [www.seomse.com](https://www.seomse.com/)
+- [runon.io](https://runon.io)
 - [github.com/seomse](https://github.com/seomse)
-- [seomse.tistory.com](https://seomse.tistory.com/)
-- [seomse.github.io](https://seomse.github.io/)
-- seomse.com
+- [github.com/runonio](https://github.com/runonio)
 
 ### 카카오톡 오픈톡
  - https://open.kakao.com/o/g6vzOKqb
