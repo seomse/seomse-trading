@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Seomse Inc.
+ * Copyright (C) 2021 Seomse Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,6 @@ public class TrendLineDown implements TrendLineCase {
     @Override
     public boolean isCountValid(TradeCandle tradeCandle) {
         //양봉이거나 같으면 유효하지 않음
-        return tradeCandle.getClose() < tradeCandle.getOpen();
+        return tradeCandle.getClose().compareTo(tradeCandle.getOpen()) < 0;
     }
 }

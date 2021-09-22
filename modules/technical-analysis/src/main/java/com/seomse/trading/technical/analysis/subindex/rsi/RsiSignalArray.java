@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Seomse Inc.
+ * Copyright (C) 2021 Seomse Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.seomse.trading.PriceChangeRate;
 import com.seomse.trading.technical.analysis.subindex.cross.Cross;
 import com.seomse.trading.technical.analysis.subindex.cross.CrossIndex;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 /**
@@ -67,26 +68,26 @@ public class RsiSignalArray {
     }
 
 
-    private double [] rsiArray;
-    private double [] signalArray;
+    private BigDecimal [] rsiArray;
+    private BigDecimal [] signalArray;
 
     /**
      * 가격변화 배열을 활용한 rsi와 signal 배열 생성
      * @param priceChangeRates 가격변화 배열
      */
     public void make(PriceChangeRate[] priceChangeRates){
-        double [] doubles = new double[priceChangeRates.length];
-        for (int i = 0; i < doubles.length; i++) {
-            doubles[i] = priceChangeRates[i].getChangeRate();
+        BigDecimal[] array = new BigDecimal[priceChangeRates.length];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = priceChangeRates[i].getChangeRate();
         }
-        make(doubles);
+        make(array);
     }
 
     /**
      * 가격변화 배열을 활용한 rsi와 signal 배열 생성
      * @param priceChangeRates 가격변화 배열
      */
-    public void make(double [] priceChangeRates){
+    public void make(BigDecimal [] priceChangeRates){
 
         //만들 수 있는 배열의 수 구하기
         int makeLength = priceChangeRates.length - n - signalN + 2;
@@ -95,7 +96,7 @@ public class RsiSignalArray {
         }
 
 
-        double [] tempRsiArray = RSI.getScores(priceChangeRates, n ,makeLength+ signalN - 1);
+        BigDecimal [] tempRsiArray = RSI.getScores(priceChangeRates, n ,makeLength+ signalN - 1);
         signalArray = RSI.getSignal(tempRsiArray, signalN, makeLength);
 
         this.rsiArray = Arrays.copyOfRange(tempRsiArray, signalN - 1, tempRsiArray.length);
@@ -107,7 +108,7 @@ public class RsiSignalArray {
      * rsi 배열 얻기
      * @return rsi array
      */
-    public double[] getRsiArray() {
+    public BigDecimal[] getRsiArray() {
         return rsiArray;
     }
 
@@ -115,7 +116,7 @@ public class RsiSignalArray {
      * rsi signal 배열 얻기
      * @return signal array
      */
-    public double[] getSignalArray() {
+    public BigDecimal[] getSignalArray() {
         return signalArray;
     }
 
@@ -125,7 +126,7 @@ public class RsiSignalArray {
      * @param rate 돌파를 확인하는 비율 (겹친 정도로는 돌파로 보기 어려움) 백분율 percent
      * @return 골든크로스 혹인 데드 크로스 관련정보
      */
-    public CrossIndex cross(double rate){
+    public CrossIndex cross(BigDecimal rate){
         return Cross.getIndex(rsiArray, signalArray, rate);
     }
 
@@ -133,7 +134,7 @@ public class RsiSignalArray {
      *
      * @return last rsi
      */
-    public double getLastRsi(){
+    public BigDecimal getLastRsi(){
         return rsiArray[rsiArray.length-1];
     }
 
@@ -141,7 +142,7 @@ public class RsiSignalArray {
      * 
      * @return last signal
      */
-    public double getLastSignal(){
+    public BigDecimal getLastSignal(){
         return signalArray[signalArray.length-1];
     }
 

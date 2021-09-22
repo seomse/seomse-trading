@@ -100,10 +100,7 @@ public class TradingChart {
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < candleStickArrSize; i++) {
             CandleStick candleStick = candleStickArr[i];
-            double open = candleStick.getOpen();
-            double close = candleStick.getClose();
-            double low = candleStick.getLow();
-            double high = candleStick.getHigh();
+
             String timeStr;
             if(dateType.equals(ChartDateType.DAY)){
                 timeStr  = DateUtil.getDateYmd(candleStick.getOpenTime(),"yyyy-MM-dd");
@@ -112,14 +109,18 @@ public class TradingChart {
             }
             createChartStr.append("""
                     {
-                        close: %.2f,
-                        high: %.2f,
-                        low: %.2f,
-                        open: %.2f,
+                        close: %s,
+                        high: %s,
+                        low: %s,
+                        open: %s,
                         time: '%s'
                       },
                     """.formatted(
-                    close,high,low,open,timeStr
+                    candleStick.getClose().stripTrailingZeros().toString()
+                    ,candleStick.getHigh().stripTrailingZeros().toString()
+                    ,candleStick.getLow().stripTrailingZeros().toString()
+                    ,candleStick.getOpen().stripTrailingZeros().toString()
+                    ,timeStr
             ));
         }
         createChartStr.setLength(createChartStr.length()-1);
@@ -267,12 +268,13 @@ public class TradingChart {
 
     /**
      * 결과를 HTML 파일로 생성 한다.
-     * @param exportFileName
+     * @param exportFileName out file name
      * @return html file path
      */
     public String makeHtmlFile(String exportFileName){
         File exportDir = new File(exportPath);
         if(!exportDir.exists()){
+            //noinspection ResultOfMethodCallIgnored
             exportDir.mkdir();
         }
         String exportFileFullPath = exportPath + "/" + exportFileName;

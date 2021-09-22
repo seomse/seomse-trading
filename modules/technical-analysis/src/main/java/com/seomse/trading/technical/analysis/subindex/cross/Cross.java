@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Seomse Inc.
+ * Copyright (C) 2021 Seomse Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 
 package com.seomse.trading.technical.analysis.subindex.cross;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 /**
  *
@@ -37,17 +40,16 @@ public class Cross {
      * @param rate 돌파를 확인하는 비율 (겹친 정도로는 돌파로 보기 어려움) 백분율 percent
      * @return 크로스 발생 유형과 위치
      */
-    public static CrossIndex getIndex(double [] shotArray, double [] longArray, double rate ){
+    public static CrossIndex getIndex(BigDecimal[] shotArray, BigDecimal [] longArray, BigDecimal rate ){
 
 
         int lastIndex = longArray.length -1;
-        //트레이딩에서는 백분율을 많이쓰므로 계산할때 /100을 해준다
-        rate = rate/100.0;
 
-        if( shotArray[lastIndex] > longArray[lastIndex]){
+
+        if( shotArray[lastIndex].compareTo( longArray[lastIndex]) > 0){
             //골득 크로스 검색
             for (int i = lastIndex ; i > 4 ; i--) {
-                if(shotArray[i] <= longArray[i] ){
+                if(shotArray[i].compareTo(longArray[i]) <= 0 ){
                     return null;
                 }
                 int gap = gap(longArray, shotArray, i);
@@ -68,10 +70,10 @@ public class Cross {
 
             }
 
-        }else if(shotArray[lastIndex] < longArray[lastIndex]){
+        }else if(shotArray[lastIndex].compareTo( longArray[lastIndex]) < 0){
             //데드 크로스 검색
             for (int i = lastIndex ; i > 4 ; i--) {
-                if(shotArray[i] >= longArray[i] ){
+                if(shotArray[i].compareTo(longArray[i]) >= 0 ){
                     return null;
                 }
 
@@ -92,10 +94,10 @@ public class Cross {
         return null;
     }
     
-    private static boolean isRate(double [] small, double [] large, int index, double rate){
+    private static boolean isRate(BigDecimal [] small, BigDecimal [] large, int index, BigDecimal rate){
         for (int i = index; i <small.length ; i++) {
-            double length = large[i] -  small[i];
-            if(length/small[i] >= rate){
+            BigDecimal length = large[i].subtract(small[i]);
+            if(length.divide(small[i], MathContext.DECIMAL128).compareTo(rate) >= 0){
                 return true;
             }
         }
@@ -110,18 +112,18 @@ public class Cross {
      * @param index 기준위치
      * @return 이전에 발생한 지점부터의 gap, 유효하지 않을경우 -1
      */
-    private static int gap(double [] small, double [] large, int index){
+    private static int gap(BigDecimal [] small, BigDecimal [] large, int index){
 
         int count = 0;
 
         int last = index;
         for (int i = index-1; i > -1 ; i--) {
             //큰값이 작아야함
-            if(large[i] > small[i]){
+            if(large[i].compareTo(small[i]) > 0){
                 break;
             }
 
-            if(large[i] < small[i]){
+            if(large[i].compareTo(small[i]) < 0){
                 count++;
             }
             last = i;

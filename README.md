@@ -1,5 +1,7 @@
 # seomse-trading
-- 최근에 선물시장 외국인 수급에 따른 영향도 분석 및 매수 매도 포인트 관련 연구개발 의뢰가 들어와서 오픈소스쪽 작업이 잠시 미루어지고 있습니다. 조만간에 다시 시작될 예정입니다.
+잠간 정체되었던 개발을 다시 진행되고 있습니다. 코인쪽 개발을 해보니 숫자형관련 부분을 BigDecimal 로 사용하는게 필수여서 모든 double 형 변수를 BigDecimal 로 변환하고 있습니다.
+
+단 이전에 작업 해 놓은게 너무 많아서 당장 사용하는 소스부터 변환 하고 있습니다.
 
 # 개발환경
 - open jdk 17
@@ -44,14 +46,13 @@ implementation 'com.seomse.trading:chart-view:0.1.0'
 # communication
 ### blog, homepage
 - [www.seomse.com](https://www.seomse.com/)
+- [runon.io](https://runon.io)
 - [github.com/seomse](https://github.com/seomse)
-- [seomse.tistory.com](https://seomse.tistory.com/)
-- [seomse.github.io](https://seomse.github.io/)
-- seomse.com
+- [github.com/runonio](https://github.com/runonio)
 
 ### 카카오톡 오픈톡
  - https://open.kakao.com/o/g6vzOKqb
-   - 참여코드: seomse
+   - 참여코드: seomseZ
 
 ### 슬랙 slack
 - https://seomse.slack.com/
@@ -62,4 +63,5 @@ implementation 'com.seomse.trading:chart-view:0.1.0'
  
 # main developer
  - macle
-    -  [github.com/macle86](https://github.com/macle86)
+    - [github.com/macle86](https://github.com/macle86)
+    - [macle.dev](https://macle.dev)

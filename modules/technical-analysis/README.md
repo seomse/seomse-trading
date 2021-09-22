@@ -13,9 +13,9 @@
 단 이전에 작업 해 놓은게 너무 많아서 당장 사용하는 소스부터 변환 하고 있습니다.
 
 # gradle
-implementation 'com.seomse.trading:technical-analysis:0.1.1'
+implementation 'com.seomse.trading:technical-analysis:0.1.0'
 - etc
-    - https://mvnrepository.com/artifact/com.seomse.trading/technical-analysis/0.1.1
+    - https://mvnrepository.com/artifact/com.seomse.trading/technical-analysis/0.1.0
 
 # communication
 ### blog, homepage

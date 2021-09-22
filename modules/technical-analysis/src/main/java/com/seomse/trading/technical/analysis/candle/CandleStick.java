@@ -333,6 +333,10 @@ public class CandleStick implements PriceChange, Candle {
      * @return  전 봉 가격
      */
     public BigDecimal getPrevious() {
+        if(previous == null && change != null){
+            previous = open.subtract(change);
+        }
+
         return previous;
     }
 
@@ -379,7 +383,7 @@ public class CandleStick implements PriceChange, Candle {
         if(isEndTrade && changeRate != null){
             return changeRate;
         }
-        changeRate =  change.divide(previous, MathContext.DECIMAL128);
+        changeRate =  change.divide(getPrevious(), MathContext.DECIMAL128);
         return changeRate;
     }
 
@@ -411,10 +415,6 @@ public class CandleStick implements PriceChange, Candle {
      */
     private long closeTime;
 
-    /**
-     * 기준시간
-     */
-    private long standardTime;
 
     /**
      * 시작시간 얻기
@@ -448,22 +448,6 @@ public class CandleStick implements PriceChange, Candle {
         this.closeTime = closeTime;
     }
 
-    /**
-     * 기준시간 얻기
-     * @return long 기준시간
-     */
-    public long getStandardTime() {
-        return standardTime;
-    }
-
-    /**
-     * 기준시간 설정
-     * 분봉이라고 하면 10시21분을 나타내는기준시간 (key)
-     * @param standardTime long 기준시간
-     */
-    public void setStandardTime(long standardTime) {
-        this.standardTime = standardTime;
-    }
 
 
     protected boolean isEndTrade = false;

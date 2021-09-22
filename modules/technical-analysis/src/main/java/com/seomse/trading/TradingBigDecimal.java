@@ -23,10 +23,19 @@ import java.math.BigDecimal;
  * @author macle
  */
 public class TradingBigDecimal {
-    public final static BigDecimal DECIMAL_100 = new BigDecimal(100);
+
+    // -1
+    public final static BigDecimal DECIMAL_M_1 = new BigDecimal(-1);
+
     public final static BigDecimal DECIMAL_2 = new BigDecimal(2);
     public final static BigDecimal DECIMAL_3 = new BigDecimal(3);
     public final static BigDecimal DECIMAL_4 = new BigDecimal(4);
+    public final static BigDecimal DECIMAL_100 = new BigDecimal(100);
+
+
+    //0.5
+    public final static BigDecimal DECIMAL_0_5 = new BigDecimal("0.5");
+
     //1.5
     public final static BigDecimal DECIMAL_1_5 = new BigDecimal("1.5");
 

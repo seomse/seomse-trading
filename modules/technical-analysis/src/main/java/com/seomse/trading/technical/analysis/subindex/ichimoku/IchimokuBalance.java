@@ -16,14 +16,8 @@
 
 package com.seomse.trading.technical.analysis.subindex.ichimoku;
 
-import com.seomse.commons.utils.time.DateUtil;
-import com.seomse.trading.PriceChangeRate;
 import com.seomse.trading.technical.analysis.candle.CandleStick;
 import com.seomse.trading.technical.analysis.subindex.ma.MovingAverage;
-import com.seomse.trading.technical.analysis.util.CandleDoubleChange;
-import org.slf4j.Logger;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  *일목균형표는 1935년 일목산인(一目山人)[1]이 미야코신문사재직중 증권시황란 작성을 위해 개발 한 후,
@@ -81,33 +75,6 @@ public class IchimokuBalance {
     public static final int DEFAULT_N = 14;
     public static final int DEFAULT_SIGNAL = 6;
 
-    /**
-     * rsi 점수 얻기
-     * 특정기간 n은 14일을 권장하므로 기본값 14를 세팅한 값
-     * 9, 25도 많이 사용함
-     * @param priceChangeRates 가격 변화율 배열
-     * @return rsi score (0~100)
-     */
-    public static double getScore(PriceChangeRate[] priceChangeRates) {
-
-        double [] doubles= CandleDoubleChange.getChangeRateArray(priceChangeRates);
-        return getScore(doubles, DEFAULT_N, doubles.length);
-    }
-
-
-    /**
-     * rsi 점수 얻기
-     * 구할 수 없을때 -1.0
-     * @param priceChangeRates 가격 변화율 배열
-     * @param n 특정기간 n
-     * @param end 배열의 끝지점
-     * @return rsi score ( 0~100)
-     */
-
-    public static double getScore(PriceChangeRate [] priceChangeRates, int n, int end){
-        double [] doubles= CandleDoubleChange.getChangeRateArray(priceChangeRates);
-        return getScore(doubles, n, end);
-    }
     /**
      * rsi 점수 얻기
      * 특정기간 n은 14일을 권장하므로 기본값 14를 세팅한 값
@@ -193,30 +160,6 @@ public class IchimokuBalance {
         }
         
         return rsiScores;
-    }
-
-    /**
-     * rsi signal
-     * 이평선
-     * 보통 6일을 많이 사용함
-     * @param rsiArray rsi 배열
-     * @return rsi signal 배열
-     */
-    public static double [] getSignal(double [] rsiArray){
-        return MovingAverage.getArray(rsiArray, 6, rsiArray.length-5);
-    }
-
-    /**
-     * rsi signal 
-     * 이평선 
-     * 보통 6일을 많이 사용함
-     * @param rsiArray rsi 배열
-     * @param n 특정기간 ( 몇일로 평균을 만들건지) 보통 6일을 많이 사용함
-     * @param signalCount 얻고 싶은 signal 개수
-     * @return rsi signal 배열
-     */
-    public static double [] getSignal(double [] rsiArray, int n, int signalCount){
-        return MovingAverage.getArray(rsiArray, n, signalCount);
     }
 
     /**

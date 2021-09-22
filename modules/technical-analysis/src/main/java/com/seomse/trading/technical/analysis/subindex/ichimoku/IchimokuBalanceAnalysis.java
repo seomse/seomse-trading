@@ -37,7 +37,7 @@ public class IchimokuBalanceAnalysis {
         IchimokuAnalysisData[] resultArray = new IchimokuAnalysisData[candleStickArray.length];
         for (int i = candleStickArray.length-1; i >= 0 ; i--) {
 
-            double closePrice = candleStickArray[i].getClose();
+            double closePrice = candleStickArray[i].getClose().doubleValue();
             String openStr = DateUtil.getDateYmd(candleStickArray[i].getOpenTime(),"yyyy-MM-dd");
 
 

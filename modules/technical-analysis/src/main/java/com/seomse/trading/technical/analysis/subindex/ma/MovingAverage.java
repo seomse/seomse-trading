@@ -16,8 +16,11 @@
 
 package com.seomse.trading.technical.analysis.subindex.ma;
 
+import com.seomse.trading.technical.analysis.CandleBigDecimalChange;
 import com.seomse.trading.technical.analysis.candle.Candle;
-import com.seomse.trading.technical.analysis.util.CandleDoubleChange;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 /**
  * 이평선
@@ -32,28 +35,28 @@ public class MovingAverage {
      * @param averageCount 평균 배열 카운드 (얻고자 하는 수)
      * @return 평균 배열
      */
-    public static double[] getArray(Candle[] candles, int n, int averageCount) {
-        return getArray(CandleDoubleChange.getCloseArray(candles), n, averageCount);
+    public static BigDecimal[] getArray(Candle[] candles, int n, int averageCount) {
+        return getArray(CandleBigDecimalChange.getCloseArray(candles), n, averageCount);
     }
 
     /**
      * 평균 배열 얻기
      *
-     * @param doubles      보통 종가 배열을 많이사용 함
+     * @param array      보통 종가 배열을 많이사용 함
      * @param n            평균을 구하기위한 개수 N
      * @param averageCount 평균 배열 카운드 (얻고자 하는 수)
      * @return 평균 배열
      */
-    public static double[] getArray(double[] doubles, int n, int averageCount) {
+    public static BigDecimal[] getArray(BigDecimal[] array, int n, int averageCount) {
 
-        if (averageCount > doubles.length) {
-            averageCount = doubles.length;
+        if (averageCount > array.length) {
+            averageCount = array.length;
         }
 
-        double[] averages = new double[averageCount];
+        BigDecimal[] averages = new BigDecimal[averageCount];
 
         //i를 포함해야 하기때문에 + 1을한다
-        int arrayGap = doubles.length - averageCount + 1;
+        int arrayGap = array.length - averageCount + 1;
 
         for (int i = 0; i < averageCount; i++) {
             int end = arrayGap + i;
@@ -64,12 +67,12 @@ public class MovingAverage {
                 start = 0;
                 length = end;
             }
-            double sum = 0.0;
+            BigDecimal sum = BigDecimal.ZERO;
 
             for (int j = start; j < end; j++) {
-                sum += doubles[j];
+                sum = sum.add(array[j]);
             }
-            averages[i] = sum / length;
+            averages[i] = sum.divide(new BigDecimal(length), MathContext.DECIMAL128);
         }
         return averages;
     }

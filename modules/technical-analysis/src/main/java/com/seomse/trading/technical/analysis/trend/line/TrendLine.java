@@ -15,6 +15,7 @@
  */
 package com.seomse.trading.technical.analysis.trend.line;
 
+import com.seomse.trading.TradingBigDecimal;
 import com.seomse.trading.technical.analysis.candle.TradeCandle;
 
 import java.math.BigDecimal;
@@ -118,13 +119,13 @@ public class TrendLine {
 
 
         BigDecimal avg = changeRateSum.abs().divide(new BigDecimal(count), MathContext.DECIMAL128);
-        BigDecimal half = shortGapRate*0.5;
+        BigDecimal half = shortGapRate.multiply(TradingBigDecimal.DECIMAL_0_5);
 
         if(half.compareTo(avg) > 0 ){
             return null;
         }
 
-        return Math.abs(candles[index-1].getClose() - candles[startIndex].getOpen()) / half*(double)count;
+        return candles[index-1].getClose().subtract(candles[startIndex].getOpen()).abs().divide(new BigDecimal(count).multiply(TradingBigDecimal.DECIMAL_0_5), MathContext.DECIMAL128);
     }
 
     /**

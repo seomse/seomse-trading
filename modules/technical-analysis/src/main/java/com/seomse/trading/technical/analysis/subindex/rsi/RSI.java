@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Seomse Inc.
+ * Copyright (C) 2021 Seomse Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,12 @@
 package com.seomse.trading.technical.analysis.subindex.rsi;
 
 import com.seomse.trading.PriceChangeRate;
+import com.seomse.trading.TradingBigDecimal;
+import com.seomse.trading.technical.analysis.CandleBigDecimalChange;
 import com.seomse.trading.technical.analysis.subindex.ma.MovingAverage;
-import com.seomse.trading.technical.analysis.util.CandleDoubleChange;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 /**
  * RSI는 일정 기간 동안 주가가 전일 가격에 비해 상승한 변화량과 하락한 변화량의 평균값을 구하여, 상승한 변화량이 크면 과매수로, 하락한 변화량이 크면 과매도로 판단하는 방식이다.
@@ -93,10 +97,10 @@ public class RSI {
      * @param priceChangeRates 가격 변화율 배열
      * @return rsi score (0~100)
      */
-    public static double getScore(PriceChangeRate[] priceChangeRates) {
+    public static BigDecimal getScore(PriceChangeRate[] priceChangeRates) {
 
-        double [] doubles= CandleDoubleChange.getChangeRateArray(priceChangeRates);
-        return getScore(doubles, DEFAULT_N, doubles.length);
+        BigDecimal[] array= CandleBigDecimalChange.getChangeRateArray(priceChangeRates);
+        return getScore(array, DEFAULT_N, array.length);
     }
 
 
@@ -109,9 +113,9 @@ public class RSI {
      * @return rsi score ( 0~100)
      */
 
-    public static double getScore(PriceChangeRate [] priceChangeRates, int n, int end){
-        double [] doubles= CandleDoubleChange.getChangeRateArray(priceChangeRates);
-        return getScore(doubles, n, end);
+    public static BigDecimal getScore(PriceChangeRate [] priceChangeRates, int n, int end){
+        BigDecimal [] array= CandleBigDecimalChange.getChangeRateArray(priceChangeRates);
+        return getScore(array, n, end);
     }
     /**
      * rsi 점수 얻기
@@ -120,7 +124,7 @@ public class RSI {
      * @param priceChangeRates 가격 변화율 배열
      * @return rsi score (0~100)
      */
-    public static double getScore(double[] priceChangeRates) {
+    public static BigDecimal getScore(BigDecimal [] priceChangeRates) {
         return getScore(priceChangeRates, 14, priceChangeRates.length);
     }
 
@@ -132,12 +136,12 @@ public class RSI {
      * @param end 배열의 끝지점
      * @return rsi score ( 0~100)
      */
-    public static double getScore(double [] priceChangeRates, int n, int end){
+    public static BigDecimal getScore(BigDecimal [] priceChangeRates, int n, int end){
         int upCount = 0;
         int downCount = 0;
 
-        double upSum = 0.0;
-        double downSum = 0.0;
+        BigDecimal upSum = BigDecimal.ZERO;
+        BigDecimal downSum = BigDecimal.ZERO;
 
 
         int start = end - n;
@@ -147,33 +151,33 @@ public class RSI {
 
         for (int i = start; i < end; i++) {
 
-            if(priceChangeRates[i] > 0.0){
+            if(priceChangeRates[i].compareTo(BigDecimal.ZERO) > 0){
                 upCount ++;
-                upSum += priceChangeRates[i];
+                upSum = upSum.add(priceChangeRates[i]);
 
-            }else if(priceChangeRates[i] < 0.0){
+            }else if(priceChangeRates[i].compareTo(BigDecimal.ZERO) < 0){
                 downCount++;
-                downSum += priceChangeRates[i];
+                downSum = downSum.add(priceChangeRates[i]);
             }
         }
 
         if(upCount == 0 ){
-            return 0.0;
+            return BigDecimal.ZERO;
         }
         if(downCount == 0){
-            return 100.0;
+            return TradingBigDecimal.DECIMAL_100;
         }
 
-        double averageUps = upSum/(double)upCount;
+        BigDecimal averageUps = upSum.divide(new BigDecimal(upCount), MathContext.DECIMAL128);
         //- 값이므로 -를 곲함 양수전환
-        double averageDowns = downSum/(double)downCount  * -1.0;
+        BigDecimal averageDowns = downSum.divide(new BigDecimal(downCount).multiply(TradingBigDecimal.DECIMAL_M_1),MathContext.DECIMAL128);
 
-        double rs = averageUps / averageDowns;
-        double rsi = rs / (1.0 + rs);
+        BigDecimal rs = averageUps.divide(averageDowns, MathContext.DECIMAL128);
+        BigDecimal rsi = rs.divide(BigDecimal.ONE.add(rs), MathContext.DECIMAL128);
 
         //소수점 4재짜리 까지만 사용하기
         //백분율 이기때문에  * 100의 효과
-        return Math.round(rsi * 10000.0) / 100.0;
+        return rsi.multiply(TradingBigDecimal.DECIMAL_100);
     }
 
     /**
@@ -184,13 +188,13 @@ public class RSI {
      * @param rsiCount 얻고 싶은 rsi 개수
      * @return rsi 배열
      */
-    public static double [] getScores(double[] priceChangeRates, int n, int rsiCount){
+    public static BigDecimal [] getScores(BigDecimal[] priceChangeRates, int n, int rsiCount){
 
         if(rsiCount > priceChangeRates.length){
             rsiCount = priceChangeRates.length;
         }
 
-        double [] rsiScores = new double[rsiCount];
+        BigDecimal [] rsiScores = new BigDecimal[rsiCount];
         
         int endGap = rsiCount;
         for (int i = 0; i <rsiCount ; i++) {
@@ -207,7 +211,7 @@ public class RSI {
      * @param rsiArray rsi 배열
      * @return rsi signal 배열
      */
-    public static double [] getSignal(double [] rsiArray){
+    public static BigDecimal [] getSignal(BigDecimal [] rsiArray){
         return MovingAverage.getArray(rsiArray, 6, rsiArray.length-5);
     }
 
@@ -220,7 +224,7 @@ public class RSI {
      * @param signalCount 얻고 싶은 signal 개수
      * @return rsi signal 배열
      */
-    public static double [] getSignal(double [] rsiArray, int n, int signalCount){
+    public static BigDecimal [] getSignal(BigDecimal [] rsiArray, int n, int signalCount){
         return MovingAverage.getArray(rsiArray, n, signalCount);
     }
 
