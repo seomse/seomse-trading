@@ -57,7 +57,7 @@ implementation 'com.seomse.trading:chart-view:0.1.0'
 
 ### 카카오톡 오픈톡
  - https://open.kakao.com/o/g6vzOKqb
-   - 참여코드: seomseZ
+   - 참여코드: runon
 
 ### 슬랙 slack
 - https://seomse.slack.com/
