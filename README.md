@@ -47,7 +47,7 @@ implementation 'com.seomse.trading:chart-view:0.1.0'
 - etc
     - https://mvnrepository.com/artifact/com.seomse.trading/chart-view/0.1.0
 
-## communication
+# communication
 ### blog, homepage
 - [github.com/runonio](https://github.com/runonio)
 - [runon.io](https://runon.io)
